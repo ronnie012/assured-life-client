@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-white;
+  }
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #aaa;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.divider:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.divider:not(:empty)::after {
+    margin-left: .25em;
+}
