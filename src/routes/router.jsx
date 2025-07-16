@@ -69,7 +69,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'admin/dashboard',
-        element: <PrivateRoute requiredRole="ADMIN"><AdminDashboardLayout /></PrivateRoute>,
+        element: <PrivateRoute requiredRole="admin" element={AdminDashboardLayout} />,
         children: [
           {
             index: true,
@@ -95,11 +95,15 @@ const router = createBrowserRouter([
             path: 'agents',
             element: <ManageAgents />,
           },
+          {
+            path: 'manage-blogs',
+            element: <ManageBlogs />,
+          },
         ],
       },
       {
         path: 'agent/dashboard',
-        element: <PrivateRoute requiredRole="AGENT"><AgentDashboardLayout /></PrivateRoute>,
+        element: <PrivateRoute requiredRole="agent" element={AgentDashboardLayout} />,
         children: [
           {
             index: true,
@@ -121,7 +125,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'customer/dashboard',
-        element: <PrivateRoute requiredRole="CUSTOMER"><CustomerDashboardLayout /></PrivateRoute>,
+        element: <PrivateRoute requiredRole="customer"><CustomerDashboardLayout /></PrivateRoute>,
         children: [
           {
             index: true,
@@ -144,7 +148,7 @@ const router = createBrowserRouter([
             element: <AgentApplicationForm />,
           },
         ],
-      },
+      }
     ],
   },
 ]);

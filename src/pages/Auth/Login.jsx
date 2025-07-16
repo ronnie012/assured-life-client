@@ -15,8 +15,10 @@ const Login = () => {
 
   useEffect(() => {
     if (user && !loading) {
+      const redirectPath = user.role === 'admin' ? '/admin/dashboard' : user.role === 'agent' ? '/agent/dashboard' : '/customer/dashboard';
+      console.log(`Login: User Role - ${user.role}, Redirecting to - ${redirectPath}`);
       toast.success('Login successful!');
-      navigate(user.role === 'ADMIN' ? '/admin/dashboard/applications' : user.role === 'AGENT' ? '/agent/dashboard/assigned-customers' : '/customer/dashboard/my-policies');
+      navigate(redirectPath);
     }
   }, [user, loading, navigate]);
 
@@ -66,7 +68,8 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="bg-transparent text-blue-700 font-semibold py-2 px-4 border-2 border-gray-300 hover:border-blue-500 rounded w-full transition-all 2-300 h-12 relative overflow-hidden hover:scale-110 inline-block dark:border-gray-600 dark:text-blue-400 dark:hover:border-blue-400"
+            disabled={loading} // Disable button when loading
+            className={`bg-transparent text-blue-700 font-semibold py-2 px-4 border-2 border-gray-300 rounded w-full transition-all 2-300 h-12 relative overflow-hidden ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:border-blue-500 hover:scale-110 inline-block dark:border-gray-600 dark:text-blue-400 dark:hover:border-blue-400'}`}
           >
             Login
           </button>

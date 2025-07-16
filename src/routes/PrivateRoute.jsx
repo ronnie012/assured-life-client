@@ -1,10 +1,12 @@
 import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthProvider';
 
 
-const PrivateRoute = ({ children, requiredRole }) => {
+const PrivateRoute = ({ children, element: Element }) => {
   const { user, loading } = useAuth();
+
+  console.log(`PrivateRoute: Rendering. Loading: ${loading}, User: ${!!user}, User Role: ${user?.role}`);
 
   if (loading) {
     return (
@@ -17,15 +19,26 @@ const PrivateRoute = ({ children, requiredRole }) => {
   }
 
   if (!user) {
-    console.log("No user found, redirecting to login.");
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && user.role.toLowerCase() !== requiredRole.toLowerCase()) {
+  // Access requiredRole directly from the route definition in router.jsx
+  const { pathname } = useLocation();
+  let requiredRole = null;
+  if (pathname.startsWith('/admin/dashboard')) {
+    requiredRole = 'admin';
+  } else if (pathname.startsWith('/agent/dashboard')) {
+    requiredRole = 'agent';
+  } else if (pathname.startsWith('/customer/dashboard')) {
+    requiredRole = 'customer';
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
+    console.log(`PrivateRoute: Role mismatch. User role: ${user.role}, Required role: ${requiredRole}. Redirecting to home.`);
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  return Element ? <Element /> : children;
 };
 
 export default PrivateRoute;

@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setLoading(true); // Set loading to true at the start of auth state change
       console.log('onAuthStateChanged - currentUser:', currentUser);
       setFirebaseUser(currentUser); // Store Firebase user
       if (currentUser) {
@@ -33,17 +32,13 @@ export const AuthProvider = ({ children }) => {
           };
           const response = await axiosPublic.post('/users/upsertFirebaseUser', userInfo);
           console.log('onAuthStateChanged - backend upsert response:', response.data);
-          // Prioritize backend data for name and photoURL, as backend is the source of truth after upsert.
-          // The issue with Google sign-in users getting an incorrect role (e.g., admin instead of customer)
-          // is likely a backend issue in the `/users/upsertFirebaseUser` endpoint, where the role
-          // is assigned or updated. The frontend sends the necessary user info, but the backend
-          // needs to ensure new users are assigned the correct default role (customer).
           const mergedUserData = {
             ...response.data,
             name: response.data.name || currentUser.displayName,
             photoURL: response.data.photoURL || currentUser.photoURL,
           };
           setUser(mergedUserData);
+          localStorage.setItem('token', idToken); // Store the token in localStorage
           queryClient.invalidateQueries(['userProfile']);
           if (currentUser.providerData[0].providerId === 'google.com') {
             toast.success('Successfully logged in with Google!');
@@ -53,12 +48,14 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
           console.error('Failed to upsert user data in backend:', error.response?.data || error.message);
           setUser(null); // Set user to null if backend upsert fails
+          localStorage.removeItem('token'); // Remove token on error
         } finally {
           setLoading(false); // Always set loading to false after processing
         }
       } else {
         console.log('onAuthStateChanged - no current user.');
         setUser(null);
+        localStorage.removeItem('token'); // Clear token on logout
         setLoading(false); // Set loading to false when no user
         queryClient.invalidateQueries(['userProfile']); // Invalidate userProfile query on logout
       }
@@ -89,7 +86,7 @@ export const AuthProvider = ({ children }) => {
 
   const googleSignIn = () => {
     setLoading(true);
-    return signInWithPopup(auth, googleProvider).finally(() => setLoading(false));
+    return signInWithPopup(auth, googleProvider);
   };
 
   const register = async (userData) => {
@@ -158,7 +155,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={authInfo}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };
