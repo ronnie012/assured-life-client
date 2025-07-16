@@ -2,14 +2,17 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
 
-
 const ManageTransactions = () => {
-  const { data: transactions, isLoading, isError } = useQuery({
+  const axiosPublic = useAxiosPublic();
+
+  const { data: transactions = [], isLoading, isError } = useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
-      const response = await axios.get('http://localhost:5000/api/v1/transactions', {
+      console.log('ManageTransactions: Attempting to fetch transactions.');
+      const response = await axiosPublic.get('/transactions', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
+      console.log('ManageTransactions: Received transactions data:', response.data);
       return response.data;
     },
   });
@@ -22,6 +25,10 @@ const ManageTransactions = () => {
     </div>
   );
   if (isError) return <div className="text-center mt-10 text-red-600">Error loading transactions.</div>;
+
+  if (!isLoading && Array.isArray(transactions) && transactions.length === 0) {
+    return <div className="text-center mt-10 text-gray-600">No transactions found.</div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -40,7 +47,7 @@ const ManageTransactions = () => {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((transaction) => (
+            {Array.isArray(transactions) && transactions.map((transaction) => (
               <tr key={transaction._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   {transaction.transactionId}
@@ -48,7 +55,7 @@ const ManageTransactions = () => {
                 <td className="px-6 py-4">{transaction.userEmail}</td>
                 <td className="px-6 py-4">{transaction.policyName}</td>
                 <td className="px-6 py-4">{transaction.amount} {transaction.currency}</td>
-                <td className="px-6 py-4">{new Date(transaction.createdAt).toLocaleDateString()}</td>
+                <td className="px-6 py-4">{transaction.createdAt ? new Date(transaction.createdAt).toLocaleDateString() : 'N/A'}</td>
                 <td className="px-6 py-4">{transaction.status}</td>
               </tr>
             ))}

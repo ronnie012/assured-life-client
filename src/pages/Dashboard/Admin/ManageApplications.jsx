@@ -29,14 +29,16 @@ const ManageApplications = () => {
   const { data: agents } = useQuery({
     queryKey: ['agents'],
     queryFn: async () => {
-      const response = await axios.get('http://localhost:5000/api/v1/agents/featured'); // Assuming this endpoint returns all agents for now
+      const response = await axiosPublic.get('/agents/featured', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
       return response.data;
     },
   });
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status, feedback }) => {
-      await axios.put(`http://localhost:5000/api/v1/applications/${id}/status`, { status, feedback }, {
+      await axiosPublic.put(`/applications/${id}/status`, { status, feedback }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
@@ -55,7 +57,7 @@ const ManageApplications = () => {
 
   const assignAgentMutation = useMutation({
     mutationFn: async ({ id, agentId }) => {
-      await axios.put(`http://localhost:5000/api/v1/applications/${id}/assign-agent`, { agentId }, {
+      await axiosPublic.put(`/applications/${id}/assign-agent`, { agentId }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },

@@ -12,17 +12,23 @@ const ManagePolicies = () => {
   const [selectedPolicy, setSelectedPolicy] = useState(null);
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
+  const axiosPublic = useAxiosPublic();
+
   const { data: policies, isLoading, isError } = useQuery({
     queryKey: ['policies'],
     queryFn: async () => {
-      const response = await axios.get('http://localhost:5000/api/v1/policies');
+      console.log('ManagePolicies: Attempting to fetch policies.');
+      const response = await axiosPublic.get('/policies', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      console.log('ManagePolicies: Received policies data:', response.data);
       return response.data.policies; // Assuming the API returns an object with a 'policies' array
     },
   });
 
   const createPolicyMutation = useMutation({
     mutationFn: async (newPolicy) => {
-      await axios.post('http://localhost:5000/api/v1/policies', newPolicy, {
+      await axiosPublic.post('/policies', newPolicy, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
@@ -39,7 +45,7 @@ const ManagePolicies = () => {
 
   const updatePolicyMutation = useMutation({
     mutationFn: async (updatedPolicy) => {
-      await axios.put(`http://localhost:5000/api/v1/policies/${updatedPolicy._id}`, updatedPolicy, {
+      await axiosPublic.put(`/policies/${updatedPolicy._id}`, updatedPolicy, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
@@ -57,7 +63,7 @@ const ManagePolicies = () => {
 
   const deletePolicyMutation = useMutation({
     mutationFn: async (policyId) => {
-      await axios.delete(`http://localhost:5000/api/v1/policies/${policyId}`, {
+      await axiosPublic.delete(`/policies/${policyId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },

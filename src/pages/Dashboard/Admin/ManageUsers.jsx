@@ -1,27 +1,29 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
-
 import { toast } from 'react-toastify';
 import { useAuth } from '../../../contexts/AuthProvider';
 
 const ManageUsers = () => {
   const { user: currentUser } = useAuth();
   const queryClient = useQueryClient();
+  const axiosPublic = useAxiosPublic();
 
-  const { data: users, isLoading, isError } = useQuery({
+  const { data: users = [], isLoading, isError } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const response = await axios.get('http://localhost:5000/api/v1/users', {
+      console.log('ManageUsers: Attempting to fetch users.');
+      const response = await axiosPublic.get('/users', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
+      console.log('ManageUsers: Received users data:', response.data);
       return response.data;
     },
   });
 
   const updateUserRoleMutation = useMutation({
     mutationFn: async ({ id, role }) => {
-      await axios.put(`http://localhost:5000/api/v1/users/${id}/role`, { role }, {
+      await axiosPublic.put(`/users/${id}/role`, { role }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
@@ -49,7 +51,12 @@ const ManageUsers = () => {
       </div>
     </div>
   );
+  
   if (isError) return <div className="text-center mt-10 text-red-600">Error loading users.</div>;
+
+  if (!isLoading && Array.isArray(users) && users.length === 0) {
+    return <div className="text-center mt-10 text-gray-600">No users found.</div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -67,7 +74,7 @@ const ManageUsers = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {Array.isArray(users) && users.map((user) => (
               <tr key={user._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   {user.name || 'N/A'}
@@ -85,7 +92,7 @@ const ManageUsers = () => {
                     <option value="admin">Admin</option>
                   </select>
                 </td>
-                <td className="px-6 py-4">{new Date(user.lastLogin).toLocaleDateString()}</td>
+                <td className="px-6 py-4">{user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'N/A'}</td>
                 <td className="px-6 py-4">
                   {/* Optional: Delete user button */}
                   <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" disabled={currentUser._id === user._id}>Delete</button>

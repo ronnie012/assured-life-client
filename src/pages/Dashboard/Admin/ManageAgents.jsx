@@ -1,41 +1,45 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
-
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import { toast } from 'react-toastify';
 
 const ManageAgents = () => {
+  const [activeTab, setActiveTab] = useState('pending'); // 'pending' or 'approved'
   const queryClient = useQueryClient();
+  const axiosPublic = useAxiosPublic();
   const [openRejectModal, setOpenRejectModal] = useState(false);
   const [selectedAgentApplication, setSelectedAgentApplication] = useState(null);
   const [rejectionFeedback, setRejectionFeedback] = useState('');
 
   // Fetch pending agent applications
-  const { data: pendingApplications, isLoading: isLoadingPending, isError: isErrorPending } = useQuery({
+  const { data: pendingApplications = [], isLoading: isLoadingPending, isError: isErrorPending } = useQuery({
     queryKey: ['pendingAgentApplications'],
     queryFn: async () => {
-      const response = await axios.get('http://localhost:5000/api/v1/agents/applications', {
+      console.log('ManageAgents: Attempting to fetch pending agent applications.');
+      const response = await axiosPublic.get('/agents/applications', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
+      console.log('ManageAgents: Received pending agent applications data:', response.data);
       return response.data;
     },
   });
 
   // Fetch all approved agents
-  const { data: approvedAgents, isLoading: isLoadingApproved, isError: isErrorApproved } = useQuery({
+  const { data: approvedAgents = [], isLoading: isLoadingApproved, isError: isErrorApproved } = useQuery({
     queryKey: ['approvedAgents'],
     queryFn: async () => {
-      const response = await axios.get('http://localhost:5000/api/v1/agents/approved', {
+      console.log('ManageAgents: Attempting to fetch approved agents.');
+      const response = await axiosPublic.get('/agents/approved', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
+      console.log('ManageAgents: Received approved agents data:', response.data);
       return response.data;
     },
   });
 
   const approveAgentMutation = useMutation({
     mutationFn: async ({ id, userId }) => {
-      await axios.put(`http://localhost:5000/api/v1/agents/applications/${id}/approve`, { userId }, {
+      await axiosPublic.put(`/agents/applications/${id}/approve`, { userId }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
@@ -51,7 +55,7 @@ const ManageAgents = () => {
 
   const rejectAgentMutation = useMutation({
     mutationFn: async ({ id, feedback }) => {
-      await axios.put(`http://localhost:5000/api/v1/agents/applications/${id}/reject`, { feedback }, {
+      await axiosPublic.put(`/agents/applications/${id}/reject`, { feedback }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
@@ -69,14 +73,13 @@ const ManageAgents = () => {
 
   const demoteAgentMutation = useMutation({
     mutationFn: async (userId) => {
-      // Assuming an endpoint to change user role exists in userRoutes
-      await axios.put(`http://localhost:5000/api/v1/users/${userId}/role`, { role: 'customer' }, {
+      await axiosPublic.put(`/users/${userId}/role`, { role: 'customer' }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['approvedAgents']);
-      queryClient.invalidateQueries(['users']); // Invalidate users query as well
+      queryClient.invalidateQueries(['users']);
       toast.success('Agent demoted to customer!');
     },
     onError: (error) => {
@@ -111,15 +114,35 @@ const ManageAgents = () => {
       <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
         <ul className="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
           <li className="me-2" role="presentation">
-            <button className="inline-block p-4 border-b-2 rounded-t-lg" id="pending-tab" data-tabs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="true">Pending Applications</button>
+            <button
+              className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'pending' ? 'border-blue-600 text-blue-600' : 'border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'}`}
+              id="pending-tab"
+              type="button"
+              role="tab"
+              aria-controls="pending"
+              aria-selected={activeTab === 'pending'}
+              onClick={() => setActiveTab('pending')}
+            >
+              Pending Applications
+            </button>
           </li>
           <li className="me-2" role="presentation">
-            <button className="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="approved-tab" data-tabs-target="#approved" type="button" role="tab" aria-controls="approved" aria-selected="false">All Current Agents</button>
+            <button
+              className={`inline-block p-4 border-b-2 rounded-t-lg ${activeTab === 'approved' ? 'border-blue-600 text-blue-600' : 'border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'}`}
+              id="approved-tab"
+              type="button"
+              role="tab"
+              aria-controls="approved"
+              aria-selected={activeTab === 'approved'}
+              onClick={() => setActiveTab('approved')}
+            >
+              All Current Agents
+            </button>
           </li>
         </ul>
       </div>
       <div id="default-tab-content">
-        <div className="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+        <div className={`${activeTab === 'pending' ? '' : 'hidden'} p-4 rounded-lg bg-gray-50 dark:bg-gray-800`} id="pending" role="tabpanel" aria-labelledby="pending-tab">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -132,14 +155,14 @@ const ManageAgents = () => {
                 </tr>
               </thead>
               <tbody>
-                {pendingApplications.map((app) => (
+                {Array.isArray(pendingApplications) && pendingApplications.map((app) => (
                   <tr key={app._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {app.name}
                     </th>
                     <td className="px-6 py-4">{app.userEmail}</td>
                     <td className="px-6 py-4">{app.experience}</td>
-                    <td className="px-6 py-4">{app.specialties.join(', ')}</td>
+                    <td className="px-6 py-4">{Array.isArray(app.specialties) ? app.specialties.join(', ') : 'N/A'}</td>
                     <td className="px-6 py-4 flex gap-2">
                       <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={() => approveAgentMutation.mutate({ id: app._id, userId: app.userId })}>Approve</button>
                       <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onClick={() => handleRejectClick(app)}>Reject</button>
@@ -150,7 +173,7 @@ const ManageAgents = () => {
             </table>
           </div>
         </div>
-        <div className="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="approved" role="tabpanel" aria-labelledby="approved-tab">
+        <div className={`${activeTab === 'approved' ? '' : 'hidden'} p-4 rounded-lg bg-gray-50 dark:bg-gray-800`} id="approved" role="tabpanel" aria-labelledby="approved-tab">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -163,14 +186,14 @@ const ManageAgents = () => {
                 </tr>
               </thead>
               <tbody>
-                {approvedAgents.map((agent) => (
+                {Array.isArray(approvedAgents) && approvedAgents.map((agent) => (
                   <tr key={agent._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {agent.name}
                     </th>
                     <td className="px-6 py-4">{agent.userEmail}</td>
                     <td className="px-6 py-4">{agent.experience}</td>
-                    <td className="px-6 py-4">{agent.specialties.join(', ')}</td>
+                    <td className="px-6 py-4">{Array.isArray(agent.specialties) ? agent.specialties.join(', ') : 'N/A'}</td>
                     <td className="px-6 py-4">
                       <button type="button" className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-yellow-900" onClick={() => demoteAgentMutation.mutate(agent.userId)}>Demote to Customer</button>
                     </td>
@@ -202,7 +225,7 @@ const ManageAgents = () => {
                 </div>
               </div>
               <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
-                <button type="button" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onClick={handleConfirmReject}>Reject Application</button>
+                <button type="button" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onClick={handleConfirmReject}>Reject Application</button>
                 <button type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onClick={() => setOpenRejectModal(false)}>Cancel</button>
               </div>
             </div>
