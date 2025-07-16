@@ -11,7 +11,7 @@ const CreateBlog = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/v1/blogs', data, {
+      const response = await axiosPublic.post('/blogs', data, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       toast.success(response.data.message);

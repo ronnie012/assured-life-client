@@ -13,11 +13,11 @@ const AssignedCustomers = () => {
   const [status, setStatus] = useState('');
   const [feedback, setFeedback] = useState('');
 
-  const { data: assignedApplications, isLoading, isError } = useQuery({
+  const { data: assignedApplications = [], isLoading, isError } = useQuery({
     queryKey: ['assignedApplications', user?.userId], // Depend on user ID
     queryFn: async () => {
       if (!user?.userId) return [];
-      const response = await axios.get('http://localhost:5000/api/v1/applications/assigned', {
+      const response = await axiosPublic.get('http://localhost:5000/api/v1/applications/assigned', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       return response.data;

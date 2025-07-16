@@ -14,11 +14,13 @@ const ManageBlogs = () => {
   const [selectedBlog, setSelectedBlog] = useState(null);
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
+  const axiosPublic = useAxiosPublic();
+
   const { data: blogs, isLoading, isError } = useQuery({
     queryKey: ['agentBlogs', user?.userId],
     queryFn: async () => {
       if (!user?.userId) return [];
-      const response = await axios.get('http://localhost:5000/api/v1/blogs/agent', {
+      const response = await axiosPublic.get('/blogs/agent', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       return response.data;
@@ -28,7 +30,7 @@ const ManageBlogs = () => {
 
   const createBlogMutation = useMutation({
     mutationFn: async (newBlog) => {
-      await axios.post('http://localhost:5000/api/v1/blogs', newBlog, {
+      await axiosPublic.post('/blogs', newBlog, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
@@ -45,7 +47,7 @@ const ManageBlogs = () => {
 
   const updateBlogMutation = useMutation({
     mutationFn: async (updatedBlog) => {
-      await axios.put(`http://localhost:5000/api/v1/blogs/${updatedBlog._id}`, updatedBlog, {
+      await axiosPublic.put(`/blogs/${updatedBlog._id}`, updatedBlog, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
@@ -63,7 +65,7 @@ const ManageBlogs = () => {
 
   const deleteBlogMutation = useMutation({
     mutationFn: async (blogId) => {
-      await axios.delete(`http://localhost:5000/api/v1/blogs/${blogId}`, {
+      await axiosPublic.delete(`/blogs/${blogId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
@@ -132,7 +134,7 @@ const ManageBlogs = () => {
             </tr>
           </thead>
           <tbody>
-            {blogs.map((blog) => (
+            {Array.isArray(blogs) && blogs.map((blog) => (
               <tr key={blog._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   {blog.title}
