@@ -33,7 +33,7 @@ const CustomerDashboardLayout = () => {
             </Link>
           </li>
         <li>
-            <Link to="apply-agent" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+            <Link to="/customer/dashboard/apply-agent" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
               <HiUserAdd className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Apply to be Agent</span>
             </Link>

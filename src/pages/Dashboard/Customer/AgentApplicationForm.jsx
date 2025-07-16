@@ -18,7 +18,7 @@ const AgentApplicationForm = () => {
         userEmail: user.email,
         status: 'Pending', // Initial status
       };
-      const response = await axiosPublic.post('/agent-applications', applicationData);
+      const response = await axiosPublic.post('/agents/applications', applicationData);
       toast.success('Agent application submitted successfully!');
       reset();
     } catch (error) {
