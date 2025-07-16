@@ -9,7 +9,7 @@ const PopularPolicies = () => {
   const { data: policies = [], isLoading } = useQuery({
     queryKey: ["popular-policies"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/popular-policies");
+      const response = await axiosPublic.get('/popular-policies');
       return res.data;
     },
   });

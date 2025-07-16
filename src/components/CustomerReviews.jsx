@@ -9,7 +9,7 @@ const CustomerReviews = () => {
   const { data: reviews = [], isLoading } = useQuery({
     queryKey: ["customer-reviews"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/reviews");
+      const res = await axiosPublic.get("/reviews/customer");
       return res.data;
     },
   });

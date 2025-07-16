@@ -78,15 +78,18 @@ export default function AppNavbar() {
                   ))}
                   {user && (
                     <NavLink
-                      to={user.role === 'ADMIN' ? '/admin/dashboard/applications' : user.role === 'AGENT' ? '/agent/dashboard/assigned-customers' : '/customer/dashboard/my-policies'}
+                      to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'agent' ? '/agent/dashboard' : '/customer/dashboard'}
                       className={getNavLinkClass}
                     >
-                      {({ isActive }) => (
-                        <>
-                          Dashboard
-                          <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform transition-transform duration-300 ease-out ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
-                        </>
-                      )}
+                      {({ isActive }) => {
+                        console.log(`Navbar: User Role - ${user.role}, Dashboard Link - ${user.role === 'admin' ? '/admin/dashboard' : user.role === 'agent' ? '/agent/dashboard' : '/customer/dashboard'}`);
+                        return (
+                          <>
+                            Dashboard
+                            <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform transition-transform duration-300 ease-out ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                          </>
+                        );
+                      }}
                     </NavLink>
                   )}
                 </div>
@@ -144,7 +147,7 @@ export default function AppNavbar() {
                         <Menu.Item>
                           {({ active }) => (
                             <Link
-                              to={user.role === 'ADMIN' ? '/admin/dashboard/applications' : user.role === 'AGENT' ? '/agent/dashboard/assigned-customers' : '/customer/dashboard/my-policies'}
+                              to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'agent' ? '/agent/dashboard' : '/customer/dashboard'}
                               className={active ? 'bg-gray-100 block px-4 py-2 text-sm text-gray-700' : 'block px-4 py-2 text-sm text-gray-700'}
                             >
                               My Dashboard
@@ -208,7 +211,7 @@ export default function AppNavbar() {
                 ))}
                 {user && (
                   <NavLink
-                    to={user.role === 'ADMIN' ? '/admin/dashboard/applications' : user.role === 'AGENT' ? '/agent/dashboard/assigned-customers' : '/customer/dashboard/my-policies'}
+                    to={user.role === 'ADMIN' ? '/admin/dashboard' : user.role === 'AGENT' ? '/agent/dashboard' : '/customer/dashboard'}
                     className={getMobileNavLinkClass}
                   >
                     {({ isActive }) => (
