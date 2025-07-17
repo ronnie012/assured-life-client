@@ -4,10 +4,11 @@ import useAxiosPublic from '../../hooks/useAxiosPublic';
 
 
 const FAQsPage = () => {
+  const axiosPublic = useAxiosPublic();
   const { data: faqs, isLoading, isError } = useQuery({
     queryKey: ['faqs'],
     queryFn: async () => {
-      const response = await axios.get('http://localhost:5000/api/v1/faqs');
+      const response = await axiosPublic.get('/faqs');
       return response.data;
     },
   });
