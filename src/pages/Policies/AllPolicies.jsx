@@ -5,6 +5,7 @@ import PolicyCard from '../../components/PolicyCard';
 
 
 const AllPolicies = () => {
+  const axiosPublic = useAxiosPublic();
   const [currentPage, setCurrentPage] = useState(1);
   const [category, setCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,8 +13,13 @@ const AllPolicies = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['allPolicies', currentPage, category, searchTerm],
     queryFn: async () => {
-      const response = await axiosPublic.get(`/policies?page=${currentPage}&limit=6&category=${category}&search=${searchTerm}`);
-      return response.data;
+      try {
+        const response = await axiosPublic.get(`/policies?page=${currentPage}&limit=6&category=${category}&search=${searchTerm}`);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching policies:", error);
+        throw error;
+      }
     },
   });
 
