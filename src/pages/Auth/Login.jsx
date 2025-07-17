@@ -17,7 +17,6 @@ const Login = () => {
     if (user && !loading) {
       const redirectPath = user.role === 'admin' ? '/admin/dashboard' : user.role === 'agent' ? '/agent/dashboard' : '/customer/dashboard';
       console.log(`Login: User Role - ${user.role}, Redirecting to - ${redirectPath}`);
-      toast.success('Login successful!');
       navigate(redirectPath);
     }
   }, [user, loading, navigate]);

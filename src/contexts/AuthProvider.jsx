@@ -40,11 +40,6 @@ export const AuthProvider = ({ children }) => {
           setUser(mergedUserData);
           localStorage.setItem('token', idToken); // Store the token in localStorage
           queryClient.invalidateQueries(['userProfile']);
-          if (currentUser.providerData[0].providerId === 'google.com') {
-            toast.success('Successfully logged in with Google!');
-          } else {
-            toast.success('Login successful!');
-          }
         } catch (error) {
           console.error('Failed to upsert user data in backend:', error.response?.data || error.message);
           setUser(null); // Set user to null if backend upsert fails
@@ -108,6 +103,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
       queryClient.invalidateQueries(['userProfile']); // Invalidate userProfile query on login
+      toast.success('Login successful!');
       return userCredential;
     } catch (error) {
       console.error('Login failed:', error.response?.data || error.message);
