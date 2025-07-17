@@ -84,8 +84,8 @@ const ManageUsers = () => {
                   <select
                     value={user.role}
                     onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                    disabled={currentUser._id === user._id} // Disable changing own role
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    disabled={currentUser._id === user._id}
+                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${currentUser._id === user._id ? 'cursor-not-allowed' : ''}`}
                   >
                     <option value="customer">Customer</option>
                     <option value="agent">Agent</option>
@@ -95,7 +95,7 @@ const ManageUsers = () => {
                 <td className="px-6 py-4">{user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'N/A'}</td>
                 <td className="px-6 py-4">
                   {/* Optional: Delete user button */}
-                  <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" disabled={currentUser._id === user._id}>Delete</button>
+                  <button type="button" className={`focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 ${ (String(currentUser._id) === String(user._id) || user.role === 'admin') ? 'opacity-50 cursor-not-allowed' : '' }`} disabled={String(currentUser._id) === String(user._id) || user.role === 'admin'}>Delete</button>
                 </td>
               </tr>
             ))}
