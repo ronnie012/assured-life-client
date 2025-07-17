@@ -130,6 +130,9 @@ const MyPolicies = () => {
             <tr>
               <th scope="col" className="px-6 py-3">Policy Name</th>
               <th scope="col" className="px-6 py-3">Status</th>
+              <th scope="col" className="px-6 py-3">Coverage</th>
+              <th scope="col" className="px-6 py-3">Duration</th>
+              <th scope="col" className="px-6 py-3">Premium</th>
               <th scope="col" className="px-6 py-3">Application Date</th>
               <th scope="col" className="px-6 py-3">Actions</th>
             </tr>
@@ -141,6 +144,9 @@ const MyPolicies = () => {
                   {app.policyName}
                 </th>
                 <td className="px-6 py-4">{app.status}</td>
+                <td className="px-6 py-4">{app.policyDetails?.coverageRange}</td>
+                <td className="px-6 py-4">{app.policyDetails?.durationOptions?.join(', ')}</td>
+                <td className="px-6 py-4">${app.policyDetails?.basePremiumRate}</td>
                 <td className="px-6 py-4">{new Date(app.submittedAt).toLocaleDateString()}</td>
                 <td className="px-6 py-4 flex gap-2">
                   {app.status === 'Approved' && (

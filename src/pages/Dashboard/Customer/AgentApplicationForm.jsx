@@ -38,10 +38,10 @@ const AgentApplicationForm = () => {
           <div>
             <label htmlFor="experience" className="block mb-2 text-sm font-medium text-gray-900">Years of Experience</label>
             <input
-              type="number"
+              type="text"
               id="experience"
-              placeholder="e.g., 5"
-              {...register('experience', { required: 'Years of experience is required', min: { value: 0, message: 'Experience cannot be negative' } })}
+              placeholder="e.g., 5 Years"
+              {...register('experience', { required: 'Years of experience is required' })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             />
             {errors.experience && <p className="text-red-500 text-xs italic mt-1">{errors.experience.message}</p>}
@@ -70,7 +70,7 @@ const AgentApplicationForm = () => {
           </div>
           <button
             type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            className="text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           >
             Submit Application
           </button>
