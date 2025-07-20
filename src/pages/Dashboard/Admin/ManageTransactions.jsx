@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const ManageTransactions = () => {
   const axiosPublic = useAxiosPublic();
@@ -16,6 +17,36 @@ const ManageTransactions = () => {
       return response.data;
     },
   });
+
+  // Process data for the chart
+  const processChartData = (transactions) => {
+    const monthlyData = {};
+
+    transactions.forEach(transaction => {
+      if (transaction.status === 'succeeded' && transaction.createdAt) {
+        const date = new Date(transaction.createdAt);
+        const monthYear = `${date.toLocaleString('default', { month: 'short' })}-${date.getFullYear()}`;
+        
+        if (!monthlyData[monthYear]) {
+          monthlyData[monthYear] = 0;
+        }
+        monthlyData[monthYear] += transaction.amount;
+      }
+    });
+
+    // Convert to array of objects for Recharts
+    const chartData = Object.keys(monthlyData).map(key => ({
+      month: key,
+      totalAmount: monthlyData[key]
+    }));
+
+    // Sort by date (optional, but good for time series)
+    chartData.sort((a, b) => new Date(a.month) - new Date(b.month));
+
+    return chartData;
+  };
+
+  const chartData = processChartData(transactions);
 
   if (isLoading) return (
     <div className="text-center mt-10">
@@ -33,6 +64,28 @@ const ManageTransactions = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-center mb-8">Manage Transactions</h1>
+
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-center mb-4">Total Earnings Over Time</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            data={chartData}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="totalAmount" fill="#8884d8" name="Total Amount" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 
-import { HiChartPie, HiViewBoards, HiInbox, HiUser, HiShoppingBag, HiArrowSmRight, HiTable } from 'react-icons/hi';
+import { HiChartPie, HiViewBoards, HiInbox, HiUser, HiShoppingBag, HiArrowSmRight, HiTable, HiCheckCircle } from 'react-icons/hi';
 
 const AdminDashboardLayout = () => {
   return (
@@ -48,6 +48,12 @@ const AdminDashboardLayout = () => {
             <Link to="/admin/dashboard/manage-blogs" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
               <HiTable className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Manage Blogs</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin/dashboard/policy-clearance" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+              <HiCheckCircle className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
+              <span className="ml-3">Policy Clearance</span>
             </Link>
           </li>
         </ul>
