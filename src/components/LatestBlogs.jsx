@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import BlogCard from "./BlogCard";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+import { Link } from 'react-router-dom';
 
 const LatestBlogs = () => {
   const axiosPublic = useAxiosPublic();
@@ -32,6 +33,11 @@ const LatestBlogs = () => {
         {blogs.map((blog) => (
           <BlogCard key={blog._id} blog={blog} />
         ))}
+      </div>
+      <div className="text-center mt-8">
+        <Link to="/blog" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
+          All Blog/Articles
+        </Link>
       </div>
     </div>
   );

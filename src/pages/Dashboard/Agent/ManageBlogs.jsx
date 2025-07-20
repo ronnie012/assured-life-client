@@ -17,15 +17,17 @@ const ManageBlogs = () => {
   const axiosPublic = useAxiosPublic();
 
   const { data: blogs, isLoading, isError } = useQuery({
-    queryKey: ['agentBlogs', user?.userId],
+    queryKey: [user?.role === 'admin' ? 'allBlogs' : 'agentBlogs', user?.uid],
     queryFn: async () => {
-      if (!user?.userId) return [];
-      const response = await axiosPublic.get('/blogs/agent', {
+      if (!user?.uid) return [];
+      const endpoint = user.role === 'admin' ? '/blogs' : '/blogs/agent';
+      const response = await axiosPublic.get(endpoint, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      return response.data;
+      // For the admin, the response is an object with a blogs array
+      return user.role === 'admin' ? response.data.blogs : response.data;
     },
-    enabled: !!user?.userId, // Only run query if user ID is available
+    enabled: !!user?.uid, // Only run query if user ID is available
   });
 
   const createBlogMutation = useMutation({
