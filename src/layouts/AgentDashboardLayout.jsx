@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 
-import { HiChartPie, HiViewBoards, HiInbox, HiUser, HiDocumentText } from 'react-icons/hi';
+import { HiChartPie, HiViewBoards, HiInbox, HiUser, HiDocumentText, HiClipboardCheck } from 'react-icons/hi';
 
 const AgentDashboardLayout = () => {
   return (
@@ -24,6 +24,12 @@ const AgentDashboardLayout = () => {
             <Link to="/agent/dashboard/manage-blogs" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
               <HiDocumentText className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Manage Blogs</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/agent/dashboard/policy-clearance" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+              <HiClipboardCheck className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
+              <span className="ml-3">Policy Clearance</span>
             </Link>
           </li>
           <li>
