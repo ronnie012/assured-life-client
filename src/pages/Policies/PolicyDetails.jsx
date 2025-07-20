@@ -6,10 +6,13 @@ import useAxiosPublic from '../../hooks/useAxiosPublic';
 
 const PolicyDetails = () => {
   const { id } = useParams();
+  const axiosPublic = useAxiosPublic();
+  
 
   const { data: policy, isLoading, isError } = useQuery({
     queryKey: ['policy', id],
     queryFn: async () => {
+      console.log('PolicyDetails: Attempting to fetch policy from API:', `/policies/${id}`);
       const response = await axiosPublic.get(`/policies/${id}`);
       return response.data;
     },
@@ -42,13 +45,13 @@ const PolicyDetails = () => {
             <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
               <li><span className="font-semibold">Eligibility:</span> Ages {policy.minAge} to {policy.maxAge}</li>
               <li><span className="font-semibold">Coverage Range:</span> {policy.coverageRange}</li>
-              <li><span className="font-semibold">Term Duration Options:</span> {policy.durationOptions.join(', ')}</li>
+              <li><span className="font-semibold">Term Duration Options:</span> {policy.durationOptions.replace(/,?\s*$/, '')}</li>
               <li><span className="font-semibold">Base Premium Rate:</span> ${policy.basePremiumRate}</li>
             </ul>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/quote" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 w-full sm:w-auto">Get Quote</Link>
-              <Link to="/agent-consultation" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 w-full sm:w-auto">Book Agent Consultation</Link>
+              
             </div>
           </div>
         </div>

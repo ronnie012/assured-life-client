@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthProvider';
 import QuoteStep from './QuoteStep';
 import ApplicationDetailsStep from './ApplicationDetailsStep';
 import PaymentStep from './PaymentStep';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
+import axios from 'axios'; // Import axios for direct use
 
 const MultiStepApplicationForm = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (location.state?.policy) {
+      setFormData(prev => ({ ...prev, policyId: location.state.policy._id }));
+    }
+  }, [location.state?.policy]);
 
   const steps = [
     { name: 'Get Quote', component: QuoteStep },
@@ -49,12 +57,14 @@ const MultiStepApplicationForm = () => {
           },
           healthDisclosure: {
             medicalConditions: updatedFormData.medicalConditions || [],
-            allergies: updatedFormData.allergies || [],
-            medications: updatedFormData.medications || [],
+            allergies: updatedFormData.allergies || '',
+            medications: updatedFormData.medications || '',
           },
+          estimatedPremium: updatedFormData.estimatedPremium,
+          status: 'Pending', // Set initial status to Pending
         };
 
-        const response = await axios.post('http://localhost:5000/api/v1/applications/submit', applicationData);
+        const response = await axios.post('http://127.0.0.1:5000/api/v1/applications', applicationData);
         toast.success(response.data.message);
         setFormData(prev => ({ ...prev, applicationId: response.data.applicationId }));
         setCurrentStep(prev => prev + 1);
@@ -64,7 +74,7 @@ const MultiStepApplicationForm = () => {
       }
     } else if (currentStep === 2) { // After PaymentStep (final step)
       toast.success('Application process completed!');
-      navigate('/dashboard/customer/my-policies'); // Redirect after final submission
+      navigate('/customer/dashboard/my-policies'); // Redirect after final submission
     }
   };
 
