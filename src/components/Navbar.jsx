@@ -2,13 +2,13 @@ import { Fragment, useState, useEffect } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link, NavLink } from 'react-router-dom';
+import { FaShieldAlt } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthProvider';
 
 const navLinks = [
   { name: 'Home', href: '/' },
   { name: 'All Policies', href: '/policies' },
-  { name: 'Agents', href: '/agents' },
-  { name: 'FAQs', href: '/faqs' },
+  { name: 'Blog/Articles', href: '/blog' },
 ];
 
 export default function AppNavbar() {
@@ -54,7 +54,8 @@ export default function AppNavbar() {
 
               <div className="flex items-center justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <Link to="/" className="text-gray-900 dark:text-white text-2xl font-bold">
+                  <Link to="/" className="flex items-center text-gray-900 dark:text-white text-2xl font-bold">
+                    <FaShieldAlt className="h-6 w-6 mr-2 text-blue-500" />
                     AssuredLife
                   </Link>
                 </div>
@@ -65,7 +66,7 @@ export default function AppNavbar() {
                     <NavLink
                       key={item.name}
                       to={item.href}
-                      end={item.href === '/'}
+                      end={item.href === '/' || item.href === '/policies'}
                       className={getNavLinkClass}
                     >
                       {({ isActive }) => (

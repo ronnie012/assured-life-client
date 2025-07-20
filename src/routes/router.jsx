@@ -1,3 +1,6 @@
+import BlogDetails from '../pages/Blog/BlogDetails';
+import Blog from '../pages/Blog/Blog';
+import QuotePage from '../pages/Application/QuotePage';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import App from '../App';
 import Home from '../pages/Home/Home';
@@ -25,6 +28,7 @@ import AgentApplicationForm from '../pages/Dashboard/Customer/AgentApplicationFo
 import ProfilePage from '../pages/Profile/ProfilePage';
 import FAQsPage from '../pages/FAQs/FAQsPage';
 import AgentsPage from '../pages/Agents/AgentsPage';
+import PolicyClearance from '../pages/Dashboard/Agent/PolicyClearance';
 
 const router = createBrowserRouter([
   {
@@ -60,12 +64,24 @@ const router = createBrowserRouter([
         element: <AgentsPage />,
       },
       {
+        path: '/blog',
+        element: <Blog />,
+      },
+      {
+        path: '/blog/:id',
+        element: <BlogDetails />,
+      },
+      {
         path: 'apply',
         element: <PrivateRoute><MultiStepApplicationForm /></PrivateRoute>,
       },
       {
         path: 'profile',
         element: <PrivateRoute><ProfilePage /></PrivateRoute>,
+      },
+      {
+        path: '/quote',
+        element: <PrivateRoute><QuotePage /></PrivateRoute>,
       },
       {
         path: 'admin/dashboard',
@@ -99,6 +115,10 @@ const router = createBrowserRouter([
             path: 'manage-blogs',
             element: <ManageBlogs />,
           },
+          {
+            path: 'policy-clearance',
+            element: <PolicyClearance />,
+          },
         ],
       },
       {
@@ -120,6 +140,10 @@ const router = createBrowserRouter([
           {
             path: 'create-blog',
             element: <CreateBlog />,
+          },
+          {
+            path: 'policy-clearance',
+            element: <PolicyClearance />,
           },
         ],
       },

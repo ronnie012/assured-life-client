@@ -57,7 +57,14 @@ const Register = () => {
               type={showPassword ? 'text' : 'password'}
               id="password"
               placeholder="Enter your password"
-              {...register('password', { required: 'Password is required' })}
+              {...register('password', {
+                required: 'Password is required',
+                minLength: { value: 6, message: 'Password must be at least 6 characters long' },
+                pattern: {
+                  value: /(?=.*[a-z])(?=.*[A-Z])/, // At least one uppercase and one lowercase letter
+                  message: 'Password must contain at least one uppercase and one lowercase letter',
+                },
+              })}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
             />
             <span
