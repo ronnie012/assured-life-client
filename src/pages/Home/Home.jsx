@@ -72,19 +72,19 @@ const Home = () => {
         className="mySwiper"
       >
         <SwiperSlide>
-          <div className="relative max-w-7xl mx-auto min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center rounded-2xl px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'url("https://via.placeholder.com/1500x800/FF0000")' }}>
+          <div className="relative max-w-7xl mx-auto min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center rounded-2xl px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'url("https://images.pexels.com/photos/3059747/pexels-photo-3059747.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")' }}>
             <div className="absolute inset-0 bg-black opacity-50 rounded-2xl"></div>
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
               <div className="max-w-3xl mx-auto">
                 <h1 className="text-3xl sm:text-5xl font-bold leading-tight lg:mt-36 mt-12 mb-4">Secure Your Tomorrow Today</h1>
                 <p className="text-md sm:text-xl mb-4">Explore policies, generate personalized quotes, and manage your insurance digitally.</p>
-                <Link to="/apply" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">Get a Free Quote</Link>
+                <Link to="/quote" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">Get a Free Quote</Link>
               </div>
             </div>
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="relative max-w-7xl mx-auto min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center rounded-2xl px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'url("https://via.placeholder.com/1500x800/00FF00")' }}>
+          <div className="relative max-w-7xl mx-auto min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center rounded-2xl px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'url("https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")' }}>
             <div className="absolute inset-0 bg-black opacity-50 rounded-2xl"></div>
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
               <div className="max-w-3xl mx-auto">
@@ -96,7 +96,7 @@ const Home = () => {
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="relative max-w-7xl mx-auto min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center rounded-2xl px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'url("https://via.placeholder.com/1500x800/0000FF")' }}>
+          <div className="relative max-w-7xl mx-auto min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center rounded-2xl px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'url("https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")' }}>
             <div className="absolute inset-0 bg-black opacity-50 rounded-2xl"></div>
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
               <div className="max-w-3xl mx-auto">
@@ -114,8 +114,7 @@ const Home = () => {
         <PopularPolicies />
       </section>
 
-      {/* Benefits of AssuredLife Section */}
-      <Benefits />
+      
 
       {/* Customer Reviews Section */}
       <CustomerReviews />

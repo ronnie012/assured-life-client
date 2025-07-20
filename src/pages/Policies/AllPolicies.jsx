@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import PolicyCard from '../../components/PolicyCard';
@@ -8,13 +8,35 @@ const AllPolicies = () => {
   const axiosPublic = useAxiosPublic();
   const [currentPage, setCurrentPage] = useState(1);
   const [category, setCategory] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [inputValue, setInputValue] = useState(''); // State for input field value
+  const [querySearchTerm, setQuerySearchTerm] = useState(''); // State for debounced search term used in query
+  const debounceTimeoutRef = useRef(null);
+
+  // Effect to update querySearchTerm after a delay based on inputValue
+  useEffect(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+    debounceTimeoutRef.current = setTimeout(() => {
+      setQuerySearchTerm(inputValue);
+    }, 700); // Debounce for 700ms
+
+    return () => {
+      clearTimeout(debounceTimeoutRef.current);
+    };
+  }, [inputValue]);
+
+  // Effect to reset currentPage when querySearchTerm or category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [querySearchTerm, category]);
+
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['allPolicies', currentPage, category, searchTerm],
+    queryKey: ['allPolicies', currentPage, category, querySearchTerm],
     queryFn: async () => {
       try {
-        const response = await axiosPublic.get(`/policies?page=${currentPage}&limit=6&category=${category}&search=${searchTerm}`);
+        const response = await axiosPublic.get(`/policies?page=${currentPage}&limit=9&category=${category}&search=${querySearchTerm}`);
         return response.data;
       } catch (error) {
         console.error("Error fetching policies:", error);
@@ -34,8 +56,7 @@ const AllPolicies = () => {
   };
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to first page on search change
+    setInputValue(e.target.value); // Update input value immediately
   };
 
   if (isLoading) return <div>Loading policies...</div>;
@@ -45,17 +66,18 @@ const AllPolicies = () => {
     <div className="container mx-auto px-4 py-8 dark:bg-gray-900">
       <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">All Policies</h1>
 
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0 md:space-x-4">
+      <div className="flex flex-col md:flex-row justify-center items-center mb-8 space-y-4 md:space-y-0 md:space-x-4">
         <input
           type="text"
           placeholder="Search by policy title..."
-          value={searchTerm}
+          value={inputValue} // Bind input to inputValue
           onChange={handleSearchChange}
           className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
         />
         <select value={category} onChange={handleCategoryChange} className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600">
           <option value="All" className="dark:bg-gray-700 dark:text-white">All Categories</option>
           <option value="Term Life" className="dark:bg-gray-700 dark:text-white">Term Life</option>
+          <option value="Whole Life" className="dark:bg-gray-700 dark:text-white">Whole Life</option>
           <option value="Senior Plan" className="dark:bg-gray-700 dark:text-white">Senior Plan</option>
           {/* Add more categories as needed */}
         </select>

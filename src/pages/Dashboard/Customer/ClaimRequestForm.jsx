@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
 import { useAuth } from '../../../contexts/AuthProvider';
 import { useQuery } from '@tanstack/react-query';
@@ -20,6 +21,19 @@ const ClaimRequestForm = () => {
       });
       // Filter for approved policies only
       return response.data.filter(app => app.status === 'Approved');
+    },
+    enabled: !!user?.userId,
+  });
+
+  // Fetch user's existing claims
+  const { data: userClaims, isLoading: isLoadingClaims, isError: isErrorClaims } = useQuery({
+    queryKey: ['userClaims', user?._id],
+    queryFn: async () => {
+      if (!user?._id) return [];
+      const response = await axiosPublic.get('/claims/my-claims', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      return response.data;
     },
     enabled: !!user?.userId,
   });
@@ -47,7 +61,13 @@ const ClaimRequestForm = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      toast.success(response.data.message);
+      Swal.fire({
+        icon: 'success',
+        title: 'Claim Submitted!',
+        text: response.data.message,
+        showConfirmButton: false,
+        timer: 1500
+      });
       reset();
     } catch (error) {
       console.error('Claim submission failed:', error.response?.data || error.message);
@@ -55,14 +75,14 @@ const ClaimRequestForm = () => {
     }
   };
 
-  if (isLoadingPolicies) return (
+  if (isLoadingPolicies || isLoadingClaims) return (
     <div className="text-center mt-10">
       <div role="status" className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
         <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
       </div>
     </div>
   );
-  if (isErrorPolicies) return <div className="text-center mt-10 text-red-600">Error loading policies for claim.</div>;
+  if (isErrorPolicies || isErrorClaims) return <div className="text-center mt-10 text-red-600">Error loading data for claim.</div>;
 
   if (!isLoadingPolicies && approvedPolicies && approvedPolicies.length === 0) {
     return <div className="text-center mt-10 text-gray-600">No approved policies found to claim against.</div>;
@@ -78,9 +98,14 @@ const ClaimRequestForm = () => {
             <select id="policyId" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" {...register('policyId', { required: 'Policy selection is required' })}>
               <option value="">-- Select an Approved Policy --</option>
               {approvedPolicies && approvedPolicies.length > 0 ? (
-                approvedPolicies.map(policy => (
-                  <option key={policy._id} value={policy.policyInfo._id}>{policy.policyName}</option>
-                ))
+                approvedPolicies.map(policy => {
+                  const hasPendingClaim = userClaims?.some(claim => claim.policyId === policy.policyInfo._id && claim.status === 'Pending');
+                  return (
+                    <option key={policy._id} value={policy.policyInfo._id} disabled={hasPendingClaim}>
+                      {policy.policyName} {hasPendingClaim && '(Claim Pending)'}
+                    </option>
+                  );
+                })
               ) : (
                 <option value="" disabled>No approved policies available</option>
               )}
@@ -100,7 +125,7 @@ const ClaimRequestForm = () => {
           </div>
 
           <button type="submit" className="text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 w-full">
-            Publish Blog
+            Submit Claim
           </button>
         </form>
       </div>

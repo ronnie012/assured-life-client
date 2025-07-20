@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
 
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../../contexts/AuthProvider';
 import { jsPDF } from 'jspdf';
@@ -95,9 +96,9 @@ const MyPolicies = () => {
       doc.setFontSize(12).text(`Address: ${application.personalData.address || 'N/A'}`, 20, 120);
 
       doc.setFontSize(16).text('\nCoverage Details:', 20, 140);
-      doc.setFontSize(12).text(`Coverage Amount: ${policy.coverageRange}`, 20, 150);
-      doc.setFontSize(12).text(`Term Duration: ${policy.durationOptions.join(', ')}`, 20, 160);
-      doc.setFontSize(12).text(`Base Premium Rate: $${policy.basePremiumRate}`, 20, 170);
+      doc.setFontSize(12).text(`Coverage Amount: ${policy.coverageRange.min} - ${policy.coverageRange.max} ${policy.coverageRange.unit}`, 20, 150);
+      doc.setFontSize(12).text(`Term Duration: ${policy.durationOptions.join(', ')} years`, 20, 160);
+      doc.setFontSize(12).text(`Base Premium Rate: ${policy.basePremiumRate} per month`, 20, 170);
 
       doc.save(`AssuredLife_${user.name || user.email}_${policy.title}.pdf`);
       toast.success('Policy PDF downloaded!');
@@ -143,7 +144,25 @@ const MyPolicies = () => {
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   {app.policyName}
                 </th>
-                <td className="px-6 py-4">{app.status}</td>
+                <td className="px-6 py-4">{app.status}
+                  {app.status === 'Rejected' && app.feedback && (
+                    <p className="text-red-500 text-xs mt-1">Feedback: {app.feedback}</p>
+                  )}
+                  {app.claimStatus === 'Approved' && (
+                    <button
+                      type="button"
+                      className="ml-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                      onClick={() => Swal.fire({
+                        icon: 'info',
+                        title: 'Claim Approved!',
+                        text: 'Your claim for this policy has been approved. Please contact our agent for further details.',
+                        confirmButtonText: 'OK'
+                      })}
+                    >
+                      Claim Approved
+                    </button>
+                  )}
+                </td>
                 <td className="px-6 py-4">{app.policyDetails?.coverageRange}</td>
                 <td className="px-6 py-4">{app.policyDetails?.durationOptions?.join(', ')}</td>
                 <td className="px-6 py-4">${app.policyDetails?.basePremiumRate}</td>
