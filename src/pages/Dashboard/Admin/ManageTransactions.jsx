@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 
 const ManageTransactions = () => {
   const axiosPublic = useAxiosPublic();
@@ -48,25 +48,12 @@ const ManageTransactions = () => {
 
   const chartData = processChartData(transactions);
 
-  if (isLoading) return (
-    <div className="text-center mt-10">
-      <div role="status" className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
-        <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
-      </div>
-    </div>
-  );
-  if (isError) return <div className="text-center mt-10 text-red-600">Error loading transactions.</div>;
-
-  if (!isLoading && Array.isArray(transactions) && transactions.length === 0) {
-    return <div className="text-center mt-10 text-gray-600">No transactions found.</div>;
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Manage Transactions</h1>
+      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">Manage Transactions</h1>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-center mb-4">Total Earnings Over Time</h2>
+        <h2 className="text-2xl font-bold text-center mb-4 dark:text-white">Total Earnings Over Time</h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={chartData}
@@ -79,8 +66,10 @@ const ManageTransactions = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
+            <YAxis tickFormatter={(value) => `${value}`}>
+              <Label value="Total Amount" angle={-90} position="insideLeft" style={{ textAnchor: 'middle' }} />
+            </YAxis>
+            <Tooltip wrapperStyle={{ zIndex: 1000 }} />
             <Legend />
             <Bar dataKey="totalAmount" fill="#8884d8" name="Total Amount" />
           </BarChart>
@@ -100,18 +89,40 @@ const ManageTransactions = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(transactions) && transactions.map((transaction) => (
-              <tr key={transaction._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {transaction.transactionId}
-                </th>
-                <td className="px-6 py-4">{transaction.userEmail}</td>
-                <td className="px-6 py-4">{transaction.policyName}</td>
-                <td className="px-6 py-4">{transaction.amount} {transaction.currency}</td>
-                <td className="px-6 py-4">{transaction.createdAt ? new Date(transaction.createdAt).toLocaleDateString() : 'N/A'}</td>
-                <td className="px-6 py-4">{transaction.status}</td>
+            {isLoading ? (
+              <tr>
+                <td colSpan="6" className="text-center py-8">
+                  <div role="status" className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
+                    <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+                  </div>
+                </td>
               </tr>
-            ))}
+            ) : isError ? (
+              <tr>
+                <td colSpan="6" className="text-center py-8 text-red-600">
+                  Error loading transactions.
+                </td>
+              </tr>
+            ) : transactions && transactions.length > 0 ? (
+              transactions.map((transaction) => (
+                <tr key={transaction._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {transaction.transactionId}
+                  </th>
+                  <td className="px-6 py-4">{transaction.userEmail}</td>
+                  <td className="px-6 py-4">{transaction.policyName}</td>
+                  <td className="px-6 py-4">{transaction.amount} {transaction.currency}</td>
+                  <td className="px-6 py-4">{transaction.createdAt ? new Date(transaction.createdAt).toLocaleDateString() : 'N/A'}</td>
+                  <td className="px-6 py-4">{transaction.status}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="text-center py-8 text-gray-600">
+                  No transactions found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
