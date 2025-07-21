@@ -78,10 +78,10 @@ const ProfilePage = () => {
   console.log("ProfilePage - Rendering with profileData:", profileData); // Added log
 
   return (
-    <div className="container mx-auto px-4 py-8 dark:bg-gray-900">
-      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">My Profile</h1>
-      <div className="max-w-xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md text-center">
-        <img src={profileData?.photoURL || "https://flowbite.com/docs/images/people/profile-picture-5.jpg"} alt="User Avatar" className="w-24 h-24 rounded-full mx-auto mb-4" />
+    <div class="container mx-auto px-4 py-2 dark:bg-gray-900">
+      <h1 class="text-3xl font-bold text-center mb-4 dark:text-white">My Profile</h1>
+      <div class="max-w-xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+        <img src={user?.photoURL || "https://flowbite.com/docs/images/people/profile-picture-5.jpg"} alt="User Avatar" class="w-24 h-24 rounded-full mx-auto mb-4" />
         <h2 className="text-2xl font-bold mb-2">{profileData?.name || 'N/A'}</h2>
         <p className="text-gray-600 mb-4">Email: {profileData?.email}</p>
         <p className="text-lg font-semibold text-blue-600 mb-6">Role: {profileData?.role}</p>

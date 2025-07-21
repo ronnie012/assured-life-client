@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
           const mergedUserData = {
             ...response.data,
             name: response.data.name || currentUser.displayName,
-            photoURL: response.data.photoURL || currentUser.photoURL,
+            photoURL: currentUser.photoURL || response.data.photoURL,
           };
           setUser(mergedUserData);
           localStorage.setItem('token', idToken); // Store the token in localStorage
