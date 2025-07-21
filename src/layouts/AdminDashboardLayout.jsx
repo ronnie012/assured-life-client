@@ -1,60 +1,63 @@
 import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, NavLink } from 'react-router-dom';
 
 import { HiChartPie, HiViewBoards, HiInbox, HiUser, HiShoppingBag, HiArrowSmRight, HiTable, HiCheckCircle } from 'react-icons/hi';
 
 const AdminDashboardLayout = () => {
+  const activeLink = 'flex items-center p-2 text-base font-normal text-white rounded-lg bg-gray-700';
+  const normalLink = 'flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700';
+
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       <nav className="flex flex-col p-4 bg-gray-800 dark:bg-gray-950 text-white w-64 space-y-2">
         <ul className="space-y-2">
           <li>
-            <Link to="/admin/dashboard" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+            <NavLink to="/admin/dashboard" end className={({ isActive }) => isActive ? activeLink : normalLink}>
               <HiChartPie className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Dashboard</span>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/admin/dashboard/applications" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+            <NavLink to="applications" className={({ isActive }) => isActive ? activeLink : normalLink}>
               <HiViewBoards className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Manage Applications</span>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/admin/dashboard/users" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+            <NavLink to="users" className={({ isActive }) => isActive ? activeLink : normalLink}>
               <HiInbox className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Manage Users</span>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/admin/dashboard/policies" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+            <NavLink to="policies" className={({ isActive }) => isActive ? activeLink : normalLink}>
               <HiUser className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Manage Policies</span>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/admin/dashboard/transactions" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+            <NavLink to="transactions" className={({ isActive }) => isActive ? activeLink : normalLink}>
               <HiShoppingBag className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Manage Transactions</span>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/admin/dashboard/agents" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+            <NavLink to="agents" className={({ isActive }) => isActive ? activeLink : normalLink}>
               <HiArrowSmRight className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Manage Agents</span>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/admin/dashboard/manage-blogs" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+            <NavLink to="manage-blogs" className={({ isActive }) => isActive ? activeLink : normalLink}>
               <HiTable className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Manage Blogs</span>
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/admin/dashboard/policy-clearance" className="flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700">
+            <NavLink to="policy-clearance" className={({ isActive }) => isActive ? activeLink : normalLink}>
               <HiCheckCircle className="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white" />
               <span className="ml-3">Policy Clearance</span>
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </nav>
