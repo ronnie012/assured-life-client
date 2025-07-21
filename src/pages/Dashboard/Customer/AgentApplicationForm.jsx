@@ -28,43 +28,43 @@ const AgentApplicationForm = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Apply to be an Agent</h1>
-      <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <p className="text-gray-700 mb-6">
+    <div className="">
+      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">Apply to be an Agent</h1>
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+        <p className="text-gray-700 dark:text-gray-300 mb-6">
           Fill out the form below to apply to become an agent. Your application will be reviewed by an administrator.
         </p>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label htmlFor="experience" className="block mb-2 text-sm font-medium text-gray-900">Years of Experience</label>
+            <label htmlFor="experience" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Years of Experience</label>
             <input
               type="text"
               id="experience"
               placeholder="e.g., 5 Years"
               {...register('experience', { required: 'Years of experience is required' })}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
             {errors.experience && <p className="text-red-500 text-xs italic mt-1">{errors.experience.message}</p>}
           </div>
           <div>
-            <label htmlFor="specialties" className="block mb-2 text-sm font-medium text-gray-900">Specialties (comma-separated)</label>
+            <label htmlFor="specialties" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Specialties (comma-separated)</label>
             <input
               type="text"
               id="specialties"
               placeholder="e.g., Life Insurance, Health Insurance, Financial Planning"
               {...register('specialties', { required: 'Specialties are required' })}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
             {errors.specialties && <p className="text-red-500 text-xs italic mt-1">{errors.specialties.message}</p>}
           </div>
           <div>
-            <label htmlFor="motivation" className="block mb-2 text-sm font-medium text-gray-900">Why do you want to be an agent?</label>
+            <label htmlFor="motivation" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Why do you want to be an agent?</label>
             <textarea
               id="motivation"
               rows="4"
               placeholder="Tell us about your motivation..."
               {...register('motivation', { required: 'Motivation is required' })}
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             ></textarea>
             {errors.motivation && <p className="text-red-500 text-xs italic mt-1">{errors.motivation.message}</p>}
           </div>

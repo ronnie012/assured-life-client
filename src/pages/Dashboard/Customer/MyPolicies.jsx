@@ -117,13 +117,9 @@ const MyPolicies = () => {
   );
   if (isError) return <div className="text-center mt-10 text-red-600">Error loading policies. Please ensure your backend is running and accessible, and that the API endpoint returns a valid response.</div>;
 
-  if (!isLoading && (!myApplications || myApplications.length === 0)) {
-    return <div className="text-center mt-10 text-gray-600">No policies found.</div>;
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">My Policies</h1>
+      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">My Policies</h1>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -139,45 +135,53 @@ const MyPolicies = () => {
             </tr>
           </thead>
           <tbody>
-            {myApplications.map((app) => (
-              <tr key={app._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {app.policyName}
-                </th>
-                <td className="px-6 py-4">{app.status}
-                  {app.status === 'Rejected' && app.feedback && (
-                    <p className="text-red-500 text-xs mt-1">Feedback: {app.feedback}</p>
-                  )}
-                  {app.claimStatus === 'Approved' && (
-                    <button
-                      type="button"
-                      className="ml-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                      onClick={() => Swal.fire({
-                        icon: 'info',
-                        title: 'Claim Approved!',
-                        text: 'Your claim for this policy has been approved. Please contact our agent for further details.',
-                        confirmButtonText: 'OK'
-                      })}
-                    >
-                      Claim Approved
-                    </button>
-                  )}
-                </td>
-                <td className="px-6 py-4">{app.policyDetails?.coverageRange}</td>
-                <td className="px-6 py-4">{app.policyDetails?.durationOptions?.join(', ')}</td>
-                <td className="px-6 py-4">${app.policyDetails?.basePremiumRate}</td>
-                <td className="px-6 py-4">{new Date(app.submittedAt).toLocaleDateString()}</td>
-                <td className="px-6 py-4 flex gap-2">
-                  {app.status === 'Approved' && (
-                    <>
-                      <button type="button" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => handleGiveReview(app)}>Give Review</button>
-                      <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={() => handleDownloadPolicy(app)}>Download Policy</button>
-                    </>
-                  )}
-                  {/* Add View Details button if needed */}
+            {myApplications && myApplications.length > 0 ? (
+              myApplications.map((app) => (
+                <tr key={app._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {app.policyName}
+                  </th>
+                  <td className="px-6 py-4">{app.status}
+                    {app.status === 'Rejected' && app.feedback && (
+                      <p className="text-red-500 text-xs mt-1">Feedback: {app.feedback}</p>
+                    )}
+                    {app.claimStatus === 'Approved' && (
+                      <button
+                        type="button"
+                        className="ml-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                        onClick={() => Swal.fire({
+                          icon: 'info',
+                          title: 'Claim Approved!',
+                          text: 'Your claim for this policy has been approved. Please contact our agent for further details.',
+                          confirmButtonText: 'OK'
+                        })}
+                      >
+                        Claim Approved
+                      </button>
+                    )}
+                  </td>
+                  <td className="px-6 py-4">{app.policyDetails?.coverageRange}</td>
+                  <td className="px-6 py-4">{app.policyDetails?.durationOptions?.join(', ')}</td>
+                  <td className="px-6 py-4">${app.policyDetails?.basePremiumRate}</td>
+                  <td className="px-6 py-4">{new Date(app.submittedAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 flex gap-2">
+                    {app.status === 'Approved' && (
+                      <>
+                        <button type="button" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => handleGiveReview(app)}>Give Review</button>
+                        <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={() => handleDownloadPolicy(app)}>Download Policy</button>
+                      </>
+                    )}
+                    {/* Add View Details button if needed */}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="text-center py-8 text-gray-600">
+                  No policies found.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

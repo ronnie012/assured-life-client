@@ -89,9 +89,9 @@ const ClaimRequestForm = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Claim Request Form</h1>
-      <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <div className="">
+      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">Claim Request Form</h1>
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label htmlFor="policyId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Policy for Claim</label>
@@ -121,7 +121,7 @@ const ClaimRequestForm = () => {
 
           <div>
             <label htmlFor="documents" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Upload Supporting Documents (Optional)</label>
-            <input type="file" id="documents" className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" {...register('documents')} multiple />
+            <input type="file" id="documents" className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 file:dark:text-white file:dark:bg-gray-600 file:dark:border-gray-600" {...register('documents')} multiple />
           </div>
 
           <button type="submit" className="text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 w-full">
