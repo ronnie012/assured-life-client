@@ -21,8 +21,6 @@ import CustomerReviews from '../../components/CustomerReviews';
 const Home = () => {
   const axiosPublic = useAxiosPublic();
 
-  
-
   const { data: latestBlogs, isLoading: isLoadingBlogs, isError: isErrorBlogs } = useQuery({
     queryKey: ['latestBlogs'],
     queryFn: async () => {
@@ -52,10 +50,11 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <>
       <Helmet>
         <title>AssuredLife - Secure Your Tomorrow Today</title>
       </Helmet>
+
       {/* Hero Section */}
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
@@ -69,11 +68,11 @@ const Home = () => {
           clickable: true,
         }}
         navigation={true}
-        className="mySwiper"
+        className="mySwiper rounded-lg overflow-hidden max-w-7xl mx-auto"
       >
         <SwiperSlide>
-          <div className="relative max-w-7xl mx-auto min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center rounded-2xl px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'url("https://images.pexels.com/photos/3059747/pexels-photo-3059747.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")' }}>
-            <div className="absolute inset-0 bg-black opacity-50 rounded-2xl"></div>
+          <div className="relative w-full min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center" style={{ backgroundImage: 'url("https://images.pexels.com/photos/3059747/pexels-photo-3059747.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")' }}>
+            <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
               <div className="max-w-3xl mx-auto">
                 <h1 className="text-3xl sm:text-5xl font-bold leading-tight lg:mt-36 mt-12 mb-4">Secure Your Tomorrow Today</h1>
@@ -84,8 +83,8 @@ const Home = () => {
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="relative max-w-7xl mx-auto min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center rounded-2xl px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'url("https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")' }}>
-            <div className="absolute inset-0 bg-black opacity-50 rounded-2xl"></div>
+          <div className="relative w-full min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center" style={{ backgroundImage: 'url("https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")' }}>
+            <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
               <div className="max-w-3xl mx-auto">
                 <h1 className="text-3xl sm:text-5xl font-bold leading-tight lg:mt-36 mt-12 mb-4">Find the Perfect Policy</h1>
@@ -96,8 +95,8 @@ const Home = () => {
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="relative max-w-7xl mx-auto min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center rounded-2xl px-4 sm:px-6 lg:px-8" style={{ backgroundImage: 'url("https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")' }}>
-            <div className="absolute inset-0 bg-black opacity-50 rounded-2xl"></div>
+          <div className="relative w-full min-h-[70vh] lg:min-h-[70vh] bg-cover bg-center" style={{ backgroundImage: 'url("https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")' }}>
+            <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
               <div className="max-w-3xl mx-auto">
                 <h1 className="text-3xl sm:text-5xl font-bold leading-tight lg:mt-36 mt-12 mb-4">Expert Guidance</h1>
@@ -114,41 +113,41 @@ const Home = () => {
         <PopularPolicies />
       </section>
 
-      
-
       {/* Customer Reviews Section */}
-      <CustomerReviews />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <CustomerReviews />
+      </div>
 
       {/* Latest Blog/Articles Section */}
-      <LatestBlogs />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <LatestBlogs />
+      </div>
 
       {/* Newsletter Subscription Section */}
-      <section className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-gray-100 dark:bg-gray-800 rounded-2xl mt-8">
-        <div className=" mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-8">Subscribe to Our Newsletter</h2>
-          <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-8">Stay updated with the latest insurance tips and offers.</p>
-          <form onSubmit={handleSubmit(onSubmitNewsletter)} className="max-w-md mx-auto bg-white dark:bg-gray-700 p-6 sm:p-8 rounded-lg shadow-md dark:border dark:border-gray-600">
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="Your Name"
-                {...registerNewsletter('name', { required: 'Name is required' })}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-              />
-              {errorsNewsletter.name && <p className="text-red-500 text-xs italic text-left mt-1">{errorsNewsletter.name.message}</p>}
-            </div>
-            <div className="mb-6">
-              <input
-                type="email"
-                placeholder="Your Email"
-                {...registerNewsletter('email', { required: 'Email is required', pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i })}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-              />
-              {errorsNewsletter.email && <p className="text-red-500 text-xs italic text-left mt-1">{errorsNewsletter.email.message}</p>}
-            </div>
-            <button type="submit" className="text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 w-full">Subscribe</button>
-          </form>
-        </div>
+      <section className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-gray-100 dark:bg-gray-800 rounded-2xl mt-8 text-center">
+        <h2 className="text-3xl sm:text-4xl font-bold mb-8">Subscribe to Our Newsletter</h2>
+        <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-8">Stay updated with the latest insurance tips and offers.</p>
+        <form onSubmit={handleSubmit(onSubmitNewsletter)} className="max-w-md mx-auto bg-white dark:bg-gray-700 p-6 sm:p-8 rounded-lg shadow-md dark:border dark:border-gray-600">
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Your Name"
+              {...registerNewsletter('name', { required: 'Name is required' })}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+            />
+            {errorsNewsletter.name && <p className="text-red-500 text-xs italic text-left mt-1">{errorsNewsletter.name.message}</p>}
+          </div>
+          <div className="mb-6">
+            <input
+              type="email"
+              placeholder="Your Email"
+              {...registerNewsletter('email', { required: 'Email is required', pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i })}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+            />
+            {errorsNewsletter.email && <p className="text-red-500 text-xs italic text-left mt-1">{errorsNewsletter.email.message}</p>}
+          </div>
+          <button type="submit" className="text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 w-full">Subscribe</button>
+        </form>
       </section>
 
       {/* Meet Our Agents Section */}
@@ -168,7 +167,7 @@ const Home = () => {
           )}
         </div>
       </section>
-    </div>
+    </>
   );
 };
 
