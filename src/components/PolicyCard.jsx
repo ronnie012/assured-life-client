@@ -10,7 +10,7 @@ const PolicyCard = ({ policy }) => {
   };
 
   return (
-    <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 dark:border-gray-700 transform transition-transform duration-300 hover:scale-105">
+    <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 dark:border-gray-700 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
       <img src={policy.policyImage || "https://images.pexels.com/photos/3059747/pexels-photo-3059747.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"} alt={policy.title} className="w-full h-48 object-cover rounded-t-lg" />
       <div className="p-5">
         <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">
