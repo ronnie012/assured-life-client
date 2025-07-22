@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       console.log('onAuthStateChanged - currentUser:', currentUser);
+      console.log('onAuthStateChanged - currentUser.photoURL:', currentUser?.photoURL);
       setFirebaseUser(currentUser); // Store Firebase user
       if (currentUser) {
         try {
@@ -34,10 +35,12 @@ export const AuthProvider = ({ children }) => {
           console.log('onAuthStateChanged - backend upsert response:', response.data);
           const mergedUserData = {
             ...response.data,
-            name: response.data.name || currentUser.displayName,
-            photoURL: currentUser.photoURL || response.data.photoURL,
+            name: response.data.name || currentUser.displayName || currentUser.email.split('@')[0] || 'User',
+            photoURL: currentUser.photoURL || response.data.photoURL || '',
           };
+          console.log('AuthProvider: Merged user data before setting state:', mergedUserData);
           setUser(mergedUserData);
+          console.log('AuthProvider: User object set:', mergedUserData);
           localStorage.setItem('token', idToken); // Store the token in localStorage
           queryClient.invalidateQueries(['userProfile']);
         } catch (error) {
@@ -81,7 +84,18 @@ export const AuthProvider = ({ children }) => {
 
   const googleSignIn = () => {
     setLoading(true);
-    return signInWithPopup(auth, googleProvider);
+    return signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        toast.success('Login successful!');
+        return result;
+      })
+      .catch((error) => {
+        toast.error(error.message || 'Google login failed.');
+        throw error;
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const register = async (userData) => {
