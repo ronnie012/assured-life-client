@@ -131,7 +131,7 @@ const Home = () => {
           <div className="mb-4">
             <input
               type="text"
-              placeholder="Your Name"
+              placeholder="Enter your name"
               {...registerNewsletter('name', { required: 'Name is required' })}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
             />
@@ -140,7 +140,7 @@ const Home = () => {
           <div className="mb-6">
             <input
               type="email"
-              placeholder="Your Email"
+              placeholder="Enter your email"
               {...registerNewsletter('email', { required: 'Email is required', pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i })}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
             />
