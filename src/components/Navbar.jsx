@@ -91,8 +91,8 @@ export default function AppNavbar() {
                 <div className="hidden md:flex items-center">
                   {user && !loading ? (
                     <div className="flex items-center space-x-2">
-                      <Link to="/profile" title="Profile">
-                        <img className="h-8 w-8 rounded-full object-cover" src={user?.photoURL || 'https://flowbite.com/docs/images/people/profile-picture-5.jpg'} alt="User profile" />
+                      <Link to="/profile" title={`${user?.name || 'User'} - ${user?.role || 'N/A'}`}>
+                        <img className="h-8 w-8 rounded-full object-cover" src={user?.photoURL || `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=random&color=fff`} alt="User profile" />
                       </Link>
                       <button onClick={logout} className="text-gray-700 dark:text-white bg-gray-200 dark:bg-gray-700 hover:bg-red-600 hover:text-white dark:hover:bg-red-600 dark:hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center dark:focus:ring-red-800 transition-colors duration-200">
                         Logout
@@ -117,7 +117,7 @@ export default function AppNavbar() {
                     {open ? (
                       <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                     ) : user ? (
-                      <img className="h-8 w-8 rounded-full object-cover" src={user?.photoURL || 'https://flowbite.com/docs/images/people/profile-picture-5.jpg'} alt="User menu" />
+                      <img className="h-8 w-8 rounded-full object-cover" src={user?.photoURL || `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=random&color=fff`} alt="User menu" />
                     ) : (
                       <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                     )}
