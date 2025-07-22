@@ -39,10 +39,10 @@ const PolicyDetails = () => {
             <img src={policy.policyImage || "https://via.placeholder.com/600x400"} alt={policy.title} className="rounded-lg shadow-md w-full" />
           </div>
           <div>
-            <h2 className="text-2xl font-semibold mb-3 text-gray-800">Policy Overview</h2>
-            <p className="text-gray-700 mb-4">{policy.description}</p>
+            <h2 className="text-2xl font-semibold mb-3 text-gray-800 dark:text-white">Policy Overview</h2>
+            <p className="text-gray-700 dark:text-gray-300 mb-4">{policy.description}</p>
 
-            <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
+            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-6">
               <li><span className="font-semibold">Eligibility:</span> Ages {policy.minAge} to {policy.maxAge}</li>
               <li><span className="font-semibold">Coverage Range:</span> {policy.coverageRange}</li>
               <li><span className="font-semibold">Term Duration Options:</span> {policy.durationOptions.replace(/,?\s*$/, '')}</li>

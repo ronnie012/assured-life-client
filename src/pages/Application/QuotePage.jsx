@@ -56,7 +56,7 @@ const QuotePage = () => {
 
             <div>
               <label htmlFor="gender" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
-              <select id="gender" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" {...register('gender', { required: 'Gender is required' })}>
+              <select id="gender" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...register('gender', { required: 'Gender is required' })}>
                 <option value="">Select Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
@@ -70,7 +70,7 @@ const QuotePage = () => {
               <input
                 type="number"
                 id="coverageAmount"
-                placeholder="e.g., 250000"
+                placeholder="e.g., 250,000"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600"
                 {...register('coverageAmount', { required: 'Coverage amount is required', min: { value: 10000, message: 'Minimum coverage is $10,000' } })}
               />
@@ -91,7 +91,7 @@ const QuotePage = () => {
 
             <div className="col-span-full">
               <label htmlFor="smoker" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Do you smoke?</label>
-              <select id="smoker" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" {...register('smoker', { required: 'Smoker status is required' })}>
+              <select id="smoker" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" {...register('smoker', { required: 'Smoker status is required' })}>
                 <option value="">Select...</option>
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
