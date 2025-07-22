@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
 
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../../contexts/AuthProvider';
 
 const ManageBlogs = () => {
   const { user } = useAuth();
+  console.log("ManageBlogs: User object state at component start:", user);
   const queryClient = useQueryClient();
   const [openModal, setOpenModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -16,19 +18,19 @@ const ManageBlogs = () => {
 
   const axiosPublic = useAxiosPublic();
 
-  const { data: blogs, isLoading, isError } = useQuery({
-    queryKey: [user?.role === 'admin' ? 'allBlogs' : 'agentBlogs', user?.uid],
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ['blogs', user?.role, user?.firebaseUid], // Use firebaseUid for unique caching
     queryFn: async () => {
-      if (!user?.uid) return [];
-      const endpoint = user.role === 'admin' ? '/blogs' : '/blogs/agent';
+      const endpoint = '/blogs/agent'; // Single endpoint for both roles
       const response = await axiosPublic.get(endpoint, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      // For the admin, the response is an object with a blogs array
-      return user.role === 'admin' ? response.data.blogs : response.data;
+      return response.data.blogs; // The backend correctly returns { blogs: [...] }
     },
-    enabled: !!user?.uid, // Only run query if user ID is available
+    enabled: !!user?.firebaseUid, // Enable query only when firebaseUid is available
   });
+
+  const blogs = Array.isArray(data) ? data : [];
 
   const createBlogMutation = useMutation({
     mutationFn: async (newBlog) => {
@@ -37,7 +39,7 @@ const ManageBlogs = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['agentBlogs']);
+      queryClient.invalidateQueries(['blogs', user?.role, user?.firebaseUid]);
       toast.success('Blog post created successfully!');
       setOpenModal(false);
       reset();
@@ -54,7 +56,7 @@ const ManageBlogs = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['agentBlogs']);
+      queryClient.invalidateQueries(['blogs', user?.role, user?.firebaseUid]);
       toast.success('Blog post updated successfully!');
       setOpenModal(false);
       reset();
@@ -72,7 +74,7 @@ const ManageBlogs = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['agentBlogs']);
+      queryClient.invalidateQueries(['blogs', user?.role, user?.firebaseUid]);
       toast.success('Blog post deleted successfully!');
     },
     onError: (error) => {
@@ -83,7 +85,7 @@ const ManageBlogs = () => {
   const handleAddBlog = () => {
     setEditMode(false);
     setSelectedBlog(null);
-    reset();
+    reset(); // Reset form fields
     setOpenModal(true);
   };
 
@@ -95,9 +97,19 @@ const ManageBlogs = () => {
   };
 
   const handleDeleteBlog = (blogId) => {
-    if (window.confirm('Are you sure you want to delete this blog post?')) {
-      deleteBlogMutation.mutate(blogId);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteBlogMutation.mutate(blogId);
+      }
+    });
   };
 
   const onSubmit = (data) => {
@@ -117,6 +129,8 @@ const ManageBlogs = () => {
   );
   if (isError) return <div className="text-center mt-10 text-red-600">Error loading blogs.</div>;
 
+  
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-center mb-8">Manage Blogs</h1>
@@ -125,20 +139,20 @@ const ManageBlogs = () => {
         <button type="button" className="text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" onClick={handleAddBlog}>Add New Blog</button>
       </div>
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">Title</th>
               <th scope="col" className="px-6 py-3">Author</th>
-              <th scope="col" className="px-6 py-3">Publish Date</th>
+              <th scope="col" className="px-6 py-3 whitespace-nowrap min-w-max">Publish Date</th>
               <th scope="col" className="px-6 py-3">Actions</th>
             </tr>
           </thead>
           <tbody>
             {Array.isArray(blogs) && blogs.map((blog) => (
               <tr key={blog._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white">
                   {blog.title}
                 </th>
                 <td className="px-6 py-4">{blog.author}</td>
@@ -177,6 +191,10 @@ const ManageBlogs = () => {
                     <label htmlFor="content" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Content</label>
                     <textarea id="content" rows="8" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" {...register('content', { required: 'Content is required' })}></textarea>
                     {errors.content && <p className="text-red-500 text-xs italic mt-1">{errors.content.message}</p>}
+                  </div>
+                  <div>
+                    <label htmlFor="blogImage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Blog Image URL</label>
+                    <input type="text" id="blogImage" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" {...register('blogImage')} />
                   </div>
                   <div className="flex justify-end gap-2">
                     <button type="submit" className="text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
