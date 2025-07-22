@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
+import axios from 'axios';
 
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
@@ -105,7 +106,9 @@ const ManagePolicies = () => {
       formData.append('image', imageFile);
 
       try {
-        const res = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`, formData, {
+        const uploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}&album=${import.meta.env.VITE_IMGBB_ALBUM_ID}`;
+        console.log('IMGBB Upload URL:', uploadUrl);
+        const res = await axios.post(uploadUrl, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -114,7 +117,7 @@ const ManagePolicies = () => {
         console.log('IMGBB Upload Success - Generated Image URL:', imageUrl);
       } catch (error) {
         toast.error('Image upload failed. Please try again.');
-        console.error('IMGBB Upload Error:', error);
+        console.error('IMGBB Upload Error:', error.response?.data || error.message);
         return; // Stop submission if image upload fails
       }
     }
