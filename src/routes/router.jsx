@@ -29,6 +29,7 @@ import ProfilePage from '../pages/Profile/ProfilePage';
 import FAQsPage from '../pages/FAQs/FAQsPage';
 import AgentsPage from '../pages/Agents/AgentsPage';
 import PolicyClearance from '../pages/Dashboard/Agent/PolicyClearance';
+import NotFound from '../pages/NotFound/NotFound';
 
 const router = createBrowserRouter([
   {
@@ -172,7 +173,11 @@ const router = createBrowserRouter([
             element: <AgentApplicationForm />,
           },
         ],
-      }
+      },
+      {
+        path: '*' ,
+        element: <NotFound />
+      },
     ],
   },
 ]);
