@@ -64,7 +64,7 @@ const MultiStepApplicationForm = () => {
           status: 'Pending', // Set initial status to Pending
         };
 
-        const response = await axios.post('http://127.0.0.1:5000/api/v1/applications', applicationData);
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/applications`, applicationData);
         toast.success(response.data.message);
         setFormData(prev => ({ ...prev, applicationId: response.data.applicationId }));
         setCurrentStep(prev => prev + 1);

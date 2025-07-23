@@ -100,7 +100,7 @@ const PaymentStep = ({ onNext, onBack, initialData }) => {
     }
 
     // Create PaymentIntent
-    axios.post('http://localhost:5000/api/v1/payments/create-payment-intent', {
+    axios.post(`${import.meta.env.VITE_API_URL}/payments/create-payment-intent`, {
       amount: Math.round(parseFloat(initialData.estimatedPremium) * 100), // Convert to cents
       policyId: initialData.policyId,
       applicationId: initialData.applicationId,

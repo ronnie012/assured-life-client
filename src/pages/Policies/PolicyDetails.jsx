@@ -12,7 +12,7 @@ const PolicyDetails = () => {
   const { data: policy, isLoading, isError } = useQuery({
     queryKey: ['policy', id],
     queryFn: async () => {
-      console.log('PolicyDetails: Attempting to fetch policy from API:', `/policies/${id}`);
+      // console.log('PolicyDetails: Attempting to fetch policy from API:', `/policies/${id}`);
       const response = await axiosPublic.get(`/policies/${id}`);
       return response.data;
     },
