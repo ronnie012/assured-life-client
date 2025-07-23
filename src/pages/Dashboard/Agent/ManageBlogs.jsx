@@ -9,7 +9,7 @@ import { useAuth } from '../../../contexts/AuthProvider';
 
 const ManageBlogs = () => {
   const { user } = useAuth();
-  console.log("ManageBlogs: User object state at component start:", user);
+  // console.log("ManageBlogs: User object state at component start:", user);
   const queryClient = useQueryClient();
   const [openModal, setOpenModal] = useState(false);
   const [editMode, setEditMode] = useState(false);

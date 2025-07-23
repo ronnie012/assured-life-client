@@ -27,7 +27,7 @@ const AssignedCustomers = () => {
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status, feedback }) => {
-      await axios.put(`http://localhost:5000/api/v1/applications/${id}/status`, { status, feedback }, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/applications/${id}/status`, { status, feedback }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
     },
