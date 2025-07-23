@@ -76,7 +76,7 @@ const ProfilePage = () => {
 
   console.log("ProfilePage - Rendering with user:", user); // Added log
   console.log("ProfilePage - Rendering with profileData:", profileData); // Added log
-  console.log("ProfilePage - Photo URL being used:", user?.photoURL || "https://flowbite.com/docs/images/people/profile-picture-5.jpg");
+  // console.log("ProfilePage - Photo URL being used:", user?.photoURL || "https://flowbite.com/docs/images/people/profile-picture-5.jpg");
 
   return (
     <div class="container mx-auto px-4 py-2 dark:bg-gray-900">

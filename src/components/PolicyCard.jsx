@@ -5,7 +5,7 @@ const PolicyCard = ({ policy }) => {
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
-    console.log('Navigating to policy details with ID:', policy._id);
+    // console.log('Navigating to policy details with ID:', policy._id);
     navigate(`/policies/${policy._id}`);
   };
 
