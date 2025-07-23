@@ -6,7 +6,7 @@ const PrivateRoute = ({ children, element: Element }) => {
   const { user, loading } = useAuth();
   const location = useLocation(); // Call useLocation unconditionally
 
-  console.log(`PrivateRoute: Rendering. Loading: ${loading}, User: ${!!user}, User Role: ${user?.role}`);
+  // console.log(`PrivateRoute: Rendering. Loading: ${loading}, User: ${!!user}, User Role: ${user?.role}`);
 
   if (loading) {
     return (

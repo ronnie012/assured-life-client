@@ -182,6 +182,6 @@ const router = createBrowserRouter([
   },
 ]);
 
-console.log("Router configuration:", router);
+// console.log("Router configuration:", router);
 
 export default router;

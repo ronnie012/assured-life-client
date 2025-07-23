@@ -141,7 +141,7 @@ export const AuthProvider = ({ children }) => {
             Authorization: `Bearer ${idToken}`,
           },
         });
-        console.log('refreshUser - fetched data:', response.data);
+        // console.log('refreshUser - fetched data:', response.data);
         setUser(response.data);
       } catch (error) {
         console.error('Failed to refresh user data:', error);

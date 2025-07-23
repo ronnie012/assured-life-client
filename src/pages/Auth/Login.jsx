@@ -16,7 +16,7 @@ const Login = () => {
   useEffect(() => {
     if (user && !loading) {
       const redirectPath = user.role === 'admin' ? '/admin/dashboard' : user.role === 'agent' ? '/agent/dashboard' : '/customer/dashboard';
-      console.log(`Login: User Role - ${user.role}, Redirecting to - ${redirectPath}`);
+      // console.log(`Login: User Role - ${user.role}, Redirecting to - ${redirectPath}`);
       navigate(redirectPath);
     }
   }, [user, loading, navigate]);
