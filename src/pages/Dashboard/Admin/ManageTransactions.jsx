@@ -13,7 +13,7 @@ const ManageTransactions = () => {
       const response = await axiosPublic.get('/transactions', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      console.log('ManageTransactions: Received transactions data:', response.data);
+      // console.log('ManageTransactions: Received transactions data:', response.data);
       return response.data;
     },
   });

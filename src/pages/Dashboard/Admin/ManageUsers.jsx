@@ -16,7 +16,7 @@ const ManageUsers = () => {
       const response = await axiosPublic.get('/users', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      console.log('ManageUsers: Received users data:', response.data);
+      // console.log('ManageUsers: Received users data:', response.data);
       return response.data;
     },
   });

@@ -123,7 +123,7 @@ const ManagePolicies = () => {
     }
 
     const policyData = { ...data, policyImage: imageUrl };
-    console.log('Policy Data being sent to backend:', policyData);
+    // console.log('Policy Data being sent to backend:', policyData);
     delete policyData.policyImageFile; // Clean up the file object
 
     if (editMode) {

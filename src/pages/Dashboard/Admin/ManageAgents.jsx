@@ -32,7 +32,7 @@ const ManageAgents = () => {
       const response = await axiosPublic.get('/agents/approved', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      console.log('ManageAgents: Received approved agents data:', response.data);
+      // console.log('ManageAgents: Received approved agents data:', response.data);
       return response.data;
     },
   });
