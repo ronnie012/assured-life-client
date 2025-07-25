@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }) => {
           console.log('AuthProvider: Merged user data before setting state:', mergedUserData);
           setUser(mergedUserData);
           console.log('AuthProvider: User object set:', mergedUserData);
+          console.log('AuthProvider: User _id:', mergedUserData._id, 'Firebase UID:', mergedUserData.firebaseUid);
           localStorage.setItem('token', idToken); // Store the token in localStorage
           queryClient.invalidateQueries(['userProfile']);
         } catch (error) {
