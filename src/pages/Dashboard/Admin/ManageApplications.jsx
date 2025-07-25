@@ -19,9 +19,7 @@ const ManageApplications = () => {
   const { data: applications, isLoading, isError } = useQuery({
     queryKey: ['applications'],
     queryFn: async () => {
-      const response = await axiosPublic.get('/applications', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
+      const response = await axiosPublic.get('/applications');
       return response.data;
     },
   });
@@ -29,18 +27,14 @@ const ManageApplications = () => {
   const { data: agents } = useQuery({
     queryKey: ['agents'],
     queryFn: async () => {
-      const response = await axiosPublic.get('/agents/featured', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
+      const response = await axiosPublic.get('/agents');
       return response.data;
     },
   });
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status, feedback }) => {
-      await axiosPublic.put(`/applications/${id}/status`, { status, feedback }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
+      await axiosPublic.put(`/applications/${id}/status`, { status, feedback });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['applications']);
@@ -57,9 +51,7 @@ const ManageApplications = () => {
 
   const assignAgentMutation = useMutation({
     mutationFn: async ({ id, agentId }) => {
-      await axiosPublic.put(`/applications/${id}/assign-agent`, { agentId }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
+      await axiosPublic.put(`/applications/${id}/assign-agent`, { agentId });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['applications']);
