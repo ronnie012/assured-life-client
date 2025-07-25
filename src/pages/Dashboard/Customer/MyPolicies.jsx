@@ -21,13 +21,12 @@ const MyPolicies = () => {
     queryKey: ['myApplications', user?._id],
     queryFn: async () => {
       if (!user?._id) return [];
-      const response = await axiosPublic.get('/policies/my-policies', {
+      const response = await axiosPublic.get('/applications/my-applications', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      // Filter for approved policies only
-      return response.data.filter(app => app.status === 'Approved');
+      return response.data;
     },
-    enabled: !!user?.userId, // Only run query if user ID is available
+    enabled: !!user?._id, // Only run query if user ID is available
   });
 
   const submitReviewMutation = useMutation({
@@ -75,30 +74,32 @@ const MyPolicies = () => {
     submitReviewMutation.mutate(reviewData);
   };
 
-  const handleDownloadPolicy = async (application) => {
+  const handleDownloadPolicy = (application) => {
     try {
-      const policyResponse = await axiosPublic.get(`/policies/${application.policyInfo._id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
-      const policy = policyResponse.data;
+      const policy = application.policyInfo;
+      const quote = application.quoteData;
+
+      if (!policy || !quote) {
+        toast.error('Policy details or quote not found.');
+        return;
+      }
 
       const doc = new jsPDF();
 
       doc.setFontSize(22).text('AssuredLife Policy Document', 20, 20);
       doc.setFontSize(14).text(`Policy: ${policy.title}`, 20, 40);
       doc.setFontSize(12).text(`Category: ${policy.category}`, 20, 50);
-      doc.setFontSize(12).text(`Description: ${policy.description}`, 20, 60);
 
-      doc.setFontSize(16).text('\nPolicy Holder Information:', 20, 80);
-      doc.setFontSize(12).text(`Name: ${user.name || user.email}`, 20, 90);
-      doc.setFontSize(12).text(`Email: ${user.email}`, 20, 100);
-      doc.setFontSize(12).text(`NID/SSN: ${application.personalData.nidSsn || 'N/A'}`, 20, 110);
-      doc.setFontSize(12).text(`Address: ${application.personalData.address || 'N/A'}`, 20, 120);
+      doc.setFontSize(16).text('\nPolicy Holder Information:', 20, 70);
+      doc.setFontSize(12).text(`Name: ${user.name || user.email}`, 20, 80);
+      doc.setFontSize(12).text(`Email: ${user.email}`, 20, 90);
+      doc.setFontSize(12).text(`NID/SSN: ${application.personalData.nidSsn || 'N/A'}`, 20, 100);
+      doc.setFontSize(12).text(`Address: ${application.personalData.address || 'N/A'}`, 20, 110);
 
-      doc.setFontSize(16).text('\nCoverage Details:', 20, 140);
-      doc.setFontSize(12).text(`Coverage Amount: ${policy.coverageRange.min} - ${policy.coverageRange.max} ${policy.coverageRange.unit}`, 20, 150);
-      doc.setFontSize(12).text(`Term Duration: ${policy.durationOptions.join(', ')} years`, 20, 160);
-      doc.setFontSize(12).text(`Base Premium Rate: ${policy.basePremiumRate} per month`, 20, 170);
+      doc.setFontSize(16).text('\nCoverage Details:', 20, 130);
+      doc.setFontSize(12).text(`Coverage Amount: $${quote.coverageAmount || 'N/A'}`, 20, 140);
+      doc.setFontSize(12).text(`Term Duration: ${quote.duration || 'N/A'} years`, 20, 150);
+      doc.setFontSize(12).text(`Premium: $${quote.premium || 'N/A'} per month`, 20, 160);
 
       doc.save(`AssuredLife_${user.name || user.email}_${policy.title}.pdf`);
       toast.success('Policy PDF downloaded!');
@@ -118,30 +119,32 @@ const MyPolicies = () => {
   if (isError) return <div className="text-center mt-10 text-red-600">Error loading policies. Please ensure your backend is running and accessible, and that the API endpoint returns a valid response.</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="mx-auto py-8">
       <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">My Policies</h1>
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="px-6 py-3">Policy Name</th>
-              <th scope="col" className="px-6 py-3">Status</th>
-              <th scope="col" className="px-6 py-3">Coverage</th>
-              <th scope="col" className="px-6 py-3">Duration</th>
-              <th scope="col" className="px-6 py-3">Premium</th>
-              <th scope="col" className="px-6 py-3">Application Date</th>
-              <th scope="col" className="px-6 py-3">Actions</th>
+              <th scope="col" className="px-4 py-3">Policy Name</th>
+              <th scope="col" className="px-4 py-3">Status</th>
+              <th scope="col" className="px-4 py-3">Coverage</th>
+              <th scope="col" className="px-4 py-3">Duration</th>
+              <th scope="col" className="px-4 py-3">Premium</th>
+              <th scope="col" className="px-4 py-3 whitespace-normal">Application Date</th>
+              <th scope="col" className="px-4 py-3 whitespace-normal">Payment Status</th>
+              <th scope="col" className="px-4 py-3">Actions</th>
             </tr>
           </thead>
           <tbody>
             {myApplications && myApplications.length > 0 ? (
               myApplications.map((app) => (
                 <tr key={app._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  <th scope="row" className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {app.policyName}
                   </th>
-                  <td className="px-6 py-4">{app.status}
+                  <td className="px-4 py-4">
+                    {app.status}
                     {app.status === 'Rejected' && app.feedback && (
                       <p className="text-red-500 text-xs mt-1">Feedback: {app.feedback}</p>
                     )}
@@ -160,18 +163,30 @@ const MyPolicies = () => {
                       </button>
                     )}
                   </td>
-                  <td className="px-6 py-4">{app.policyDetails?.coverageRange}</td>
-                  <td className="px-6 py-4">{app.policyDetails?.durationOptions?.join(', ')}</td>
-                  <td className="px-6 py-4">${app.policyDetails?.basePremiumRate}</td>
-                  <td className="px-6 py-4">{new Date(app.submittedAt).toLocaleDateString()}</td>
-                  <td className="px-6 py-4 flex gap-2">
-                    {app.status === 'Approved' && (
-                      <>
-                        <button type="button" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => handleGiveReview(app)}>Give Review</button>
-                        <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={() => handleDownloadPolicy(app)}>Download Policy</button>
-                      </>
-                    )}
-                    {/* Add View Details button if needed */}
+                  <td className="px-4 py-4">{app.quoteData?.coverageAmount ? `${app.quoteData.coverageAmount}` : 'N/A'}</td>
+                  <td className="px-4 py-4">{app.quoteData?.duration ? `${app.quoteData.duration} Years` : 'N/A'}</td>
+                  <td className="px-4 py-4">{app.quoteData?.estimatedPremium ? `${app.quoteData.estimatedPremium}` : 'N/A'}</td>
+                  <td className="px-4 py-4 whitespace-normal">{new Date(app.submittedAt).toLocaleDateString()}</td>
+                  <td className="px-4 py-4 whitespace-normal">{app.paymentStatus}</td>
+                  <td className="px-4 py-4">
+                    <div className="flex flex-wrap gap-2">
+                      {app.status === 'Approved' && (
+                        <>
+                          <button type="button" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => handleGiveReview(app)}>Give Review</button>
+                          <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={() => handleDownloadPolicy(app)}>Download Policy</button>
+                        </>
+                      )}
+                      {app.status === 'Approved' && app.paymentStatus !== 'Paid' && (
+                        <button
+                          type="button"
+                          className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
+                          onClick={() => navigate(`/apply/payment/${app._id}`)}
+                        >
+                          Pay Now
+                        </button>
+                      )}
+                      {/* Add View Details button if needed */}
+                    </div>
                   </td>
                 </tr>
               ))

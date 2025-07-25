@@ -9,7 +9,7 @@ const CustomerDashboardLayout = () => {
 
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-      <nav className="flex flex-col p-4 bg-gray-800 dark:bg-gray-950 text-white w-64 space-y-2">
+      <nav className="flex flex-col p-4 bg-gray-800 dark:bg-gray-950 text-white w-48 space-y-2">
         <ul className="space-y-2">
           <li>
             <NavLink to="/customer/dashboard" end className={({ isActive }) => isActive ? activeLink : normalLink}>
