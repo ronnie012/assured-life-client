@@ -25,7 +25,9 @@ const QuoteStep = ({ onNext, initialData }) => {
   };
 
   const onSubmit = (data) => {
+    console.log('QuoteStep - Input data for premium calculation:', data);
     const premium = calculatePremium(data);
+    console.log('QuoteStep - Calculated premium:', premium);
     onNext({ ...data, estimatedPremium: premium });
   };
 
@@ -55,13 +57,13 @@ const QuoteStep = ({ onNext, initialData }) => {
       </div>
 
       <div>
-        <label htmlFor="coverageAmount" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Coverage Amount (e.g., 100000)</label>
+        <label htmlFor="coverageAmount" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Coverage Amount ($)</label>
         <input
           type="number"
           id="coverageAmount"
           placeholder="e.g., 100000"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          {...register('coverageAmount', { required: 'Coverage amount is required', min: { value: 10000, message: 'Minimum coverage is 10,000' } })}
+          {...register('coverageAmount', { required: 'Coverage amount is required', min: { value: 10000, message: 'Minimum coverage is $10,000' } })}
         />
         {errors.coverageAmount && <p className="text-red-500 text-xs italic mt-1">{errors.coverageAmount.message}</p>}
       </div>

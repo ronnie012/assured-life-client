@@ -3,14 +3,15 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { toast } from 'react-toastify';
-
+import axios from 'axios';
 import { useAuth } from '../../contexts/AuthProvider';
+import { useTheme } from '../../contexts/ThemeContext';
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the Stripe object on every render.
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-const CheckoutForm = ({ onNext, onBack, initialData }) => {
+const CheckoutForm = ({ applicationId, isDarkMode }) => {
   const stripe = useStripe();
   const elements = useElements();
   const { user } = useAuth();
@@ -30,7 +31,7 @@ const CheckoutForm = ({ onNext, onBack, initialData }) => {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/application-success`,
+        return_url: `${window.location.origin}/customer/dashboard/my-policies`,
       },
       redirect: 'if_required',
     });
@@ -45,22 +46,29 @@ const CheckoutForm = ({ onNext, onBack, initialData }) => {
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       try {
         // Save transaction info to your backend
-        await axios.post('http://localhost:5000/api/v1/payments/save-payment-info', {
+        await axios.post(`${import.meta.env.VITE_API_URL}/payments/save-payment-info`, {
           transactionId: paymentIntent.id,
           amount: paymentIntent.amount,
           currency: paymentIntent.currency,
           status: paymentIntent.status,
           paymentMethod: paymentIntent.payment_method_types[0],
-          policyId: initialData.policyId, // Assuming policyId is passed from previous steps
-          applicationId: initialData.applicationId, // Assuming applicationId is passed
+          applicationId: applicationId, // Use applicationId from props
         }, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
+
+        // Update application status to 'Paid' and increment policy purchase count
+        await axios.put(`${import.meta.env.VITE_API_URL}/applications/update-status/${applicationId}`, {
+          status: 'Paid',
+        }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+
         toast.success('Payment successful and recorded!');
-        onNext(); // Proceed to final step/completion
+        window.location.href = '/customer/dashboard/my-policies'; // Redirect to my policies after successful payment
       } catch (saveError) {
-        console.error('Error saving payment info:', saveError);
-        toast.error('Payment successful, but failed to record transaction. Please contact support.');
+        console.error('Error saving payment info or updating application:', saveError);
+        toast.error('Payment successful, but failed to record transaction or update application. Please contact support.');
       }
     } else {
       setMessage("Payment processing. You will be notified when it completes.");
@@ -72,8 +80,7 @@ const CheckoutForm = ({ onNext, onBack, initialData }) => {
   return (
     <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
       <PaymentElement id="payment-element" />
-      <div className="flex justify-between mt-6">
-        <button type="button" onClick={onBack} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Back</button>
+      <div className="flex justify-center mt-6">
         <button type="submit" disabled={isLoading || !stripe || !elements} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
           <span id="button-text">
             {isLoading ? <svg aria-hidden="true" role="status" className="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -88,41 +95,61 @@ const CheckoutForm = ({ onNext, onBack, initialData }) => {
   );
 };
 
-const PaymentStep = ({ onNext, onBack, initialData }) => {
+import { useParams } from 'react-router-dom';
+
+const PaymentStep = () => {
   const { user } = useAuth();
+  const { isDarkMode } = useTheme();
   const [clientSecret, setClientSecret] = useState('');
+  const { applicationId } = useParams(); // Get applicationId from URL params
+
+  console.log('PaymentStep - isDarkMode:', isDarkMode);
 
   useEffect(() => {
-    if (!user || !initialData.policyId || !initialData.applicationId || !initialData.estimatedPremium) {
-      toast.error('Missing payment details. Please go back to previous steps.');
-      onBack(); // Go back if data is missing
-      return;
-    }
+    const fetchApplicationAndCreatePaymentIntent = async () => {
+      if (!user || !applicationId) {
+        toast.error('Missing application ID for payment.');
+        return;
+      }
 
-    // Create PaymentIntent
-    axios.post(`${import.meta.env.VITE_API_URL}/payments/create-payment-intent`, {
-      amount: Math.round(parseFloat(initialData.estimatedPremium) * 100), // Convert to cents
-      policyId: initialData.policyId,
-      applicationId: initialData.applicationId,
-    }, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-    })
-      .then((res) => setClientSecret(res.data.clientSecret))
-      .catch((err) => {
-        console.error('Error fetching client secret:', err.response?.data || err.message);
+      try {
+        const response = await axiosPublic.get(`/applications/${applicationId}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        const application = response.data;
+
+        if (application.status !== 'Approved') {
+          toast.error('Policy not yet approved for payment.');
+          // Optionally redirect or disable payment options
+          return;
+        }
+
+        // Now create PaymentIntent
+        const paymentIntentResponse = await axiosPublic.post(`${import.meta.env.VITE_API_URL}/payments/create-payment-intent`, {
+          amount: Math.round(parseFloat(application.quoteData.estimatedPremium) * 100), // Use estimatedPremium from fetched application
+          policyId: application.policyId,
+          applicationId: application._id,
+        }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        setClientSecret(paymentIntentResponse.data.clientSecret);
+      } catch (error) {
+        console.error('Error fetching application or creating payment intent:', error.response?.data || error.message);
         toast.error('Could not initiate payment. Please try again.');
-        onBack();
-      });
-  }, [user, initialData, onBack]);
+      }
+    };
 
-  const appearance = { theme: 'stripe' };
+    fetchApplicationAndCreatePaymentIntent();
+  }, [user, applicationId, axiosPublic]);
+
+  const appearance = { theme: isDarkMode ? 'night' : 'stripe' };
   const options = { clientSecret, appearance };
 
   return (
     <div className="payment-step">
       {clientSecret ? (
-        <Elements options={options} stripe={stripePromise}>
-          <CheckoutForm onNext={onNext} onBack={onBack} initialData={initialData} />
+        <Elements options={options} stripe={stripePromise} key={isDarkMode ? 'dark' : 'light'}>
+          <CheckoutForm applicationId={applicationId} isDarkMode={isDarkMode} />
         </Elements>
       ) : (
         <div className="text-center">

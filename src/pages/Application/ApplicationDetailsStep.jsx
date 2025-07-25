@@ -2,13 +2,16 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 
-const ApplicationDetailsStep = ({ onNext, onBack, initialData }) => {
+const ApplicationDetailsStep = ({ onNext, onBack, initialData, quoteData }) => {
   const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: initialData,
+    defaultValues: {
+      ...initialData,
+      ...initialData.quoteData, // Spread quoteData fields to the top level
+    },
   });
 
   const onSubmit = (data) => {
-    onNext(data);
+    onNext({ ...data, quoteData });
   };
 
   return (
@@ -55,8 +58,8 @@ const ApplicationDetailsStep = ({ onNext, onBack, initialData }) => {
             {errors.nomineeName && <p className="text-red-500 text-xs italic mt-1">{errors.nomineeName.message}</p>}
           </div>
           <div>
-            <Label htmlFor="nomineeRelationship" value="Relationship to Nominee" />
-            <TextInput id="nomineeRelationship" type="text" {...register('nomineeRelationship', { required: 'Relationship is required' })} />
+            <label htmlFor="nomineeRelationship" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Relationship to Nominee</label>
+            <input type="text" id="nomineeRelationship" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" {...register('nomineeRelationship', { required: 'Relationship is required' })} />
             {errors.nomineeRelationship && <p className="text-red-500 text-xs italic mt-1">{errors.nomineeRelationship.message}</p>}
           </div>
         </div>
@@ -64,28 +67,28 @@ const ApplicationDetailsStep = ({ onNext, onBack, initialData }) => {
 
       {/* Health Disclosure */}
       <div>
-        <h2 className="text-2xl font-semibold mb-4">Health Disclosure</h2>
-        <p className="mb-2 text-gray-700">Please check all that apply:</p>
+        <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">Health Disclosure</h2>
+        <p className="mb-2 text-gray-700 dark:text-gray-300">Please check all that apply:</p>
         <div className="space-y-2">
           <div className="flex items-center">
             <input id="condition1" type="checkbox" value="Diabetes" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" {...register('medicalConditions')} />
-            <label htmlFor="condition1" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Diabetes</label>
+            <label htmlFor="condition1" className="ms-2 text-sm font-medium text-gray-900 dark:text-white">Diabetes</label>
           </div>
           <div className="flex items-center">
             <input id="condition2" type="checkbox" value="Heart Disease" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" {...register('medicalConditions')} />
-            <label htmlFor="condition2" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Heart Disease</label>
+            <label htmlFor="condition2" className="ms-2 text-sm font-medium text-gray-900 dark:text-white">Heart Disease</label>
           </div>
           <div className="flex items-center">
             <input id="condition3" type="checkbox" value="High Blood Pressure" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" {...register('medicalConditions')} />
-            <label htmlFor="condition3" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">High Blood Pressure</label>
+            <label htmlFor="condition3" className="ms-2 text-sm font-medium text-gray-900 dark:text-white">High Blood Pressure</label>
           </div>
           <div className="flex items-center">
             <input id="condition4" type="checkbox" value="Cancer" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" {...register('medicalConditions')} />
-            <label htmlFor="condition4" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cancer</label>
+            <label htmlFor="condition4" className="ms-2 text-sm font-medium text-gray-900 dark:text-white">Cancer</label>
           </div>
           <div className="flex items-center">
             <input id="condition5" type="checkbox" value="Asthma" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" {...register('medicalConditions')} />
-            <label htmlFor="condition5" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Asthma</label>
+            <label htmlFor="condition5" className="ms-2 text-sm font-medium text-gray-900 dark:text-white">Asthma</label>
           </div>
           {/* Add more health conditions as needed */}
         </div>
