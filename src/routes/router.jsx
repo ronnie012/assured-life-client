@@ -24,6 +24,7 @@ import CreateBlog from '../pages/Dashboard/Agent/CreateBlog';
 import MyPolicies from '../pages/Dashboard/Customer/MyPolicies';
 import PaymentStatus from '../pages/Dashboard/Customer/PaymentStatus';
 import ClaimRequestForm from '../pages/Dashboard/Customer/ClaimRequestForm';
+import PaymentStep from '../pages/Application/PaymentStep';
 import AgentApplicationForm from '../pages/Dashboard/Customer/AgentApplicationForm';
 import ProfilePage from '../pages/Profile/ProfilePage';
 import FAQsPage from '../pages/FAQs/FAQsPage';
@@ -74,15 +75,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'apply',
-        element: <PrivateRoute><MultiStepApplicationForm /></PrivateRoute>,
+        element: <PrivateRoute requiredRole="customer"><MultiStepApplicationForm /></PrivateRoute>,
       },
       {
         path: 'profile',
-        element: <PrivateRoute><ProfilePage /></PrivateRoute>,
+        element: <PrivateRoute requiredRole="customer"><ProfilePage /></PrivateRoute>,
+      },
+      {
+        path: 'apply/payment/:applicationId',
+        element: <PrivateRoute requiredRole="customer"><PaymentStep /></PrivateRoute>,
       },
       {
         path: '/quote',
-        element: <PrivateRoute><QuotePage /></PrivateRoute>,
+        element: <PrivateRoute requiredRole="customer"><QuotePage /></PrivateRoute>,
       },
       {
         path: 'admin/dashboard',

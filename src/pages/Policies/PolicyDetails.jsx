@@ -44,13 +44,13 @@ const PolicyDetails = () => {
 
             <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-6">
               <li><span className="font-semibold">Eligibility:</span> Ages {policy.minAge} to {policy.maxAge}</li>
-              <li><span className="font-semibold">Coverage Range:</span> {policy.coverageRange}</li>
+              <li><span className="font-semibold">Coverage Range:</span> ${policy.coverageRange}</li>
               <li><span className="font-semibold">Term Duration Options:</span> {policy.durationOptions.replace(/,?\s*$/, '')}</li>
               <li><span className="font-semibold">Base Premium Rate:</span> ${policy.basePremiumRate}</li>
             </ul>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/quote" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 w-full sm:w-auto">Get Quote</Link>
+              <Link to="/quote" state={{ policy: policy }} className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 w-full sm:w-auto">Get Quote</Link>
               
             </div>
           </div>

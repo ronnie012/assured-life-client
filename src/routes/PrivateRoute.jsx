@@ -2,11 +2,9 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthProvider';
 
-const PrivateRoute = ({ children, element: Element }) => {
+const PrivateRoute = ({ children, element: Element, requiredRole }) => {
   const { user, loading } = useAuth();
-  const location = useLocation(); // Call useLocation unconditionally
-
-  // console.log(`PrivateRoute: Rendering. Loading: ${loading}, User: ${!!user}, User Role: ${user?.role}`);
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -20,16 +18,6 @@ const PrivateRoute = ({ children, element: Element }) => {
 
   if (!user) {
     return <Navigate to="/login" replace />;
-  }
-
-  // Access requiredRole directly from the route definition in router.jsx
-  let requiredRole = null;
-  if (location.pathname.startsWith('/admin/dashboard')) {
-    requiredRole = 'admin';
-  } else if (location.pathname.startsWith('/agent/dashboard')) {
-    requiredRole = 'agent';
-  } else if (location.pathname.startsWith('/customer/dashboard')) {
-    requiredRole = 'customer';
   }
 
   if (requiredRole && user.role !== requiredRole) {
