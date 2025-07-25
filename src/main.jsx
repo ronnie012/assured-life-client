@@ -11,6 +11,7 @@ import App from './App.jsx';
 import router from './routes/router';
 import './index.css';
 import { AuthProvider } from './contexts/AuthProvider';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 const queryClient = new QueryClient();
 
@@ -19,10 +20,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
+          <ThemeProvider>
             <RouterProvider router={router}>
               <App />
             </RouterProvider>
-          </AuthProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </HelmetProvider>
     <ToastContainer />
