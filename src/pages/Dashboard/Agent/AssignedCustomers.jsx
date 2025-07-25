@@ -8,28 +8,31 @@ import { useAuth } from '../../../contexts/AuthProvider';
 const AssignedCustomers = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const axiosPublic = useAxiosPublic();
   const [openModal, setOpenModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [status, setStatus] = useState('');
   const [feedback, setFeedback] = useState('');
 
   const { data: assignedApplications = [], isLoading, isError } = useQuery({
-    queryKey: ['assignedApplications', user?.userId], // Depend on user ID
+    queryKey: ['assignedApplications', user?._id], // Depend on user ID
     queryFn: async () => {
-      if (!user?.userId) return [];
-      const response = await axiosPublic.get('http://localhost:5000/api/v1/applications/assigned', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
+      if (!user?._id) {
+        console.log('Frontend: User ID not available, skipping query.');
+        return [];
+      }
+      console.log('Frontend: Fetching assigned applications for agent with MongoDB ID:', user._id);
+      console.log('Frontend: Agent Firebase UID:', user.firebaseUid);
+      const response = await axiosPublic.get(`/applications/assigned`);
+      console.log('Frontend: Assigned applications data:', response.data);
       return response.data;
     },
-    enabled: !!user?.userId, // Only run query if user ID is available
+    enabled: !!user?._id, // Only run query if user ID is available
   });
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status, feedback }) => {
-      await axios.put(`${import.meta.env.VITE_API_URL}/applications/${id}/status`, { status, feedback }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
+      await axiosPublic.put(`/applications/${id}/status`, { status, feedback });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['assignedApplications']);
@@ -40,7 +43,8 @@ const AssignedCustomers = () => {
       setFeedback('');
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to update status.');
+      console.error('Frontend: Error in useQuery for assigned applications:', error.response?.data || error.message);
+      toast.error(error.response?.data?.message || 'Failed to load assigned applications.');
     },
   });
 
