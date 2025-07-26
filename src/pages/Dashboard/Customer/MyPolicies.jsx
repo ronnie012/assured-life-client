@@ -86,20 +86,20 @@ const MyPolicies = () => {
 
       const doc = new jsPDF();
 
-      doc.setFontSize(22).text('AssuredLife Policy Document', 20, 20);
-      doc.setFontSize(14).text(`Policy: ${policy.title}`, 20, 40);
-      doc.setFontSize(12).text(`Category: ${policy.category}`, 20, 50);
+      doc.setFontSize(30).text('AssuredLife Policy Document', 40, 40);
+      doc.setFontSize(18).text(`Policy: ${policy.title}`, 40, 60);
+      doc.setFontSize(16).text(`Category: ${policy.category}`, 40, 70);
 
-      doc.setFontSize(16).text('\nPolicy Holder Information:', 20, 70);
-      doc.setFontSize(12).text(`Name: ${user.name || user.email}`, 20, 80);
-      doc.setFontSize(12).text(`Email: ${user.email}`, 20, 90);
-      doc.setFontSize(12).text(`NID/SSN: ${application.personalData.nidSsn || 'N/A'}`, 20, 100);
-      doc.setFontSize(12).text(`Address: ${application.personalData.address || 'N/A'}`, 20, 110);
+      doc.setFontSize(24).text('\nPolicy Holder Information:', 40, 90);
+      doc.setFontSize(16).text(`Name: ${user.name || user.email}`, 40, 110);
+      doc.setFontSize(16).text(`Email: ${user.email}`, 40, 120);
+      doc.setFontSize(16).text(`NID/SSN: ${application.personalData.nidSsn || 'N/A'}`, 40, 130);
+      doc.setFontSize(16).text(`Address: ${application.personalData.address || 'N/A'}`, 40, 140);
 
-      doc.setFontSize(16).text('\nCoverage Details:', 20, 130);
-      doc.setFontSize(12).text(`Coverage Amount: $${quote.coverageAmount || 'N/A'}`, 20, 140);
-      doc.setFontSize(12).text(`Term Duration: ${quote.duration || 'N/A'} years`, 20, 150);
-      doc.setFontSize(12).text(`Premium: $${quote.premium || 'N/A'} per month`, 20, 160);
+      doc.setFontSize(24).text('\nCoverage Details:', 40, 160);
+      doc.setFontSize(16).text(`Coverage Amount: $ ${quote.coverageAmount || 'N/A'}`, 40, 180);
+      doc.setFontSize(16).text(`Term Duration: ${quote.duration || 'N/A'} years`, 40, 190);
+      doc.setFontSize(16).text(`Premium: $ ${quote.estimatedPremium || 'N/A'} per month`, 40, 200);
 
       doc.save(`AssuredLife_${user.name || user.email}_${policy.title}.pdf`);
       toast.success('Policy PDF downloaded!');
@@ -163,9 +163,9 @@ const MyPolicies = () => {
                       </button>
                     )}
                   </td>
-                  <td className="px-4 py-4">{app.quoteData?.coverageAmount ? `${app.quoteData.coverageAmount}` : 'N/A'}</td>
+                  <td className="px-4 py-4">{app.quoteData?.coverageAmount ? `$ ${app.quoteData.coverageAmount}` : 'N/A'}</td>
                   <td className="px-4 py-4">{app.quoteData?.duration ? `${app.quoteData.duration} Years` : 'N/A'}</td>
-                  <td className="px-4 py-4">{app.quoteData?.estimatedPremium ? `${app.quoteData.estimatedPremium}` : 'N/A'}</td>
+                  <td className="px-4 py-4">{app.quoteData?.estimatedPremium ? `$ ${app.quoteData.estimatedPremium}` : 'N/A'}</td>
                   <td className="px-1 py-4 whitespace-normal">{new Date(app.submittedAt).toLocaleDateString()}</td>
                   <td className="px-1 py-4 whitespace-normal">{app.paymentStatus}</td>
                   <td className="px-4 py-4">
