@@ -171,14 +171,14 @@ const MyPolicies = () => {
                   <td className="px-1 py-4 whitespace-normal">{new Date(app.submittedAt).toLocaleDateString()}</td>
                   <td className="px-1 py-4 whitespace-normal">{app.paymentStatus}</td>
                   <td className="px-4 py-4">
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-4">
                       {app.status === 'Approved' && app.paymentStatus === 'Paid' && (
-                        <>
-                          <button type="button" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 whitespace-normal min-w-[70px] text-center" onClick={() => handleGiveReview(app)}>Give<br/>Review</button>
-                          <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 whitespace-normal min-w-[70px] text-center" onClick={() => handleDownloadPolicy(app)}>Download<br/>Policy</button>
-                        </>
+                        <button type="button" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 whitespace-normal min-w-[70px] text-center" onClick={() => handleGiveReview(app)}>Give<br/>Review</button>
                       )}
-                      {app.status === 'Approved' && app.paymentStatus !== 'Paid' && (
+                      {app.status === 'Approved' && (
+                        <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-6 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 whitespace-normal min-w-[70px] text-center" onClick={() => handleDownloadPolicy(app)}>Download<br/>Policy</button>
+                      )}
+                      {app.status === 'Approved' && app.paymentStatus === 'Due' && (
                         <button
                           type="button"
                           className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 whitespace-normal min-w-[70px] text-center"

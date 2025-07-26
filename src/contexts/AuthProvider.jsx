@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
           console.log('onAuthStateChanged - backend upsert response:', response.data);
           const mergedUserData = {
             ...response.data,
+            uid: currentUser.uid, // Ensure Firebase UID is available as user.uid
             name: response.data.name || currentUser.displayName || currentUser.email.split('@')[0] || 'User',
             photoURL: currentUser.photoURL || response.data.photoURL || '',
           };

@@ -11,7 +11,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 // recreating the Stripe object on every render.
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-const CheckoutForm = ({ applicationId, isDarkMode }) => {
+const CheckoutForm = ({ applicationId, isDarkMode, selectedApplication }) => {
   const stripe = useStripe();
   const elements = useElements();
   const { user } = useAuth();
@@ -53,6 +53,7 @@ const CheckoutForm = ({ applicationId, isDarkMode }) => {
           status: paymentIntent.status,
           paymentMethod: paymentIntent.payment_method_types[0],
           applicationId: applicationId, // Use applicationId from props
+          policyId: selectedApplication.policyInfo._id, // Add policyId here
         }, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
@@ -60,7 +61,9 @@ const CheckoutForm = ({ applicationId, isDarkMode }) => {
         
 
         toast.success('Payment successful and recorded!');
-        window.location.href = '/customer/dashboard/my-policies'; // Redirect to my policies after successful payment
+        setTimeout(() => {
+          window.location.href = '/customer/dashboard/my-policies'; // Redirect to my policies after successful payment
+        }, 1000); // Delay for 1 second
       } catch (saveError) {
         console.error('Error saving payment info or updating application:', saveError);
         toast.error('Payment successful, but failed to record transaction or update application. Please contact support.');
@@ -98,6 +101,7 @@ const PaymentStep = () => {
   const { isDarkMode } = useTheme();
   const [clientSecret, setClientSecret] = useState('');
   const { applicationId } = useParams(); // Get applicationId from URL params
+  const [selectedApplication, setSelectedApplication] = useState(null); // Define selectedApplication state
 
   console.log('PaymentStep - isDarkMode:', isDarkMode);
 
@@ -113,6 +117,7 @@ const PaymentStep = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         const application = response.data;
+        setSelectedApplication(application); // Set selectedApplication here
         console.log('Fetched application:', application);
 
         if (application.status !== 'Approved') {
@@ -160,7 +165,7 @@ const PaymentStep = () => {
       {clientSecret ? (
         <div className="max-w-md mx-auto p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md text-gray-900 dark:text-white">
           <Elements options={options} stripe={stripePromise} key={isDarkMode ? 'dark' : 'light'}>
-            <CheckoutForm applicationId={applicationId} isDarkMode={isDarkMode} />
+            <CheckoutForm applicationId={applicationId} isDarkMode={isDarkMode} selectedApplication={selectedApplication} />
           </Elements>
         </div>
       ) : (

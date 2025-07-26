@@ -7,17 +7,20 @@ import { Link } from 'react-router-dom';
 
 const PaymentStatus = () => {
   const { user } = useAuth();
+  const axiosPublic = useAxiosPublic();
+  console.log('PaymentStatus - user:', user);
+  console.log('PaymentStatus - user.uid:', user?.uid);
 
-  const { data: transactions, isLoading, isError } = useQuery({
-    queryKey: ['myTransactions', user?._id],
+  const { data: applications, isLoading, isError, error } = useQuery({
+    queryKey: ['myApplications', user?.firebaseUid],
     queryFn: async () => {
-      if (!user?._id) return [];
-      const response = await axiosPublic.get('/transactions/my-transactions', {
+      if (!user?.firebaseUid) return [];
+      const response = await axiosPublic.get('/applications/my-applications', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      return response.data;
+      return response.data.filter(app => app.status === 'Approved'); // Only show approved policies
     },
-    enabled: !!user?.userId, // Only run query if user ID is available
+    enabled: !!user?.firebaseUid, // Only run query if user ID is available
   });
 
   if (isLoading) return (
@@ -27,10 +30,13 @@ const PaymentStatus = () => {
       </div>
     </div>
   );
-  if (isError) return <div className="text-center mt-10 text-red-600">Error loading payment status.</div>;
+  if (isError) {
+    console.error('Error loading payment status:', error);
+    return <div className="text-center mt-10 text-red-600">Error loading payment status. Please check console for details.</div>;
+  }
 
-  if (!isLoading && transactions && transactions.length === 0) {
-    return <div className="text-center mt-10 text-gray-600">No transactions found.</div>;
+  if (!isLoading && applications && applications.length === 0) {
+    return <div className="text-center mt-10 text-gray-600">No approved policies found.</div>;
   }
 
   return (
@@ -49,25 +55,25 @@ const PaymentStatus = () => {
             </tr>
           </thead>
           <tbody>
-            {transactions && transactions.length > 0 ? (
-              transactions.map((transaction) => (
-                <tr key={transaction._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            {applications && applications.length > 0 ? (
+              applications.map((app) => (
+                <tr key={app._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {transaction.policyName}
+                    {app.policyName}
                   </th>
-                  <td className="px-6 py-4">{transaction.amount} {transaction.currency}</td>
+                  <td className="px-6 py-4">{`$ ${app.quoteData?.estimatedPremium ? (app.quoteData.estimatedPremium).toFixed(2) : 'N/A'}`}</td>
                   <td className="px-6 py-4">Monthly</td>
-                  <td className="px-6 py-4">{transaction.status}</td>
+                  <td className="px-6 py-4">{app.paymentStatus}</td>
                   <td className="px-6 py-4">
-                    {transaction.status === 'Due' && (
-                      <Link to={`/payment/${transaction.policyId}`} className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Make Payment</Link>
+                    {app.paymentStatus === 'Due' && (
+                      <Link to={`/apply/payment/${app._id}`} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 whitespace-normal min-w-[70px] text-center">Pay Now</Link>
                     )}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">No transactions found.</td>
+                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">No approved policies found.</td>
               </tr>
             )}
           </tbody>
