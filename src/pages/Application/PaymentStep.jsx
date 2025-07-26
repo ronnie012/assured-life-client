@@ -57,12 +57,7 @@ const CheckoutForm = ({ applicationId, isDarkMode }) => {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
 
-        // Update application status to 'Paid' and increment policy purchase count
-        await axios.put(`${import.meta.env.VITE_API_URL}/applications/update-status/${applicationId}`, {
-          status: 'Paid',
-        }, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        });
+        
 
         toast.success('Payment successful and recorded!');
         window.location.href = '/customer/dashboard/my-policies'; // Redirect to my policies after successful payment
@@ -99,6 +94,7 @@ import { useParams } from 'react-router-dom';
 
 const PaymentStep = () => {
   const { user } = useAuth();
+  const axiosPublic = useAxiosPublic();
   const { isDarkMode } = useTheme();
   const [clientSecret, setClientSecret] = useState('');
   const { applicationId } = useParams(); // Get applicationId from URL params
@@ -117,6 +113,7 @@ const PaymentStep = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         const application = response.data;
+        console.log('Fetched application:', application);
 
         if (application.status !== 'Approved') {
           toast.error('Policy not yet approved for payment.');
@@ -125,9 +122,22 @@ const PaymentStep = () => {
         }
 
         // Now create PaymentIntent
+        const estimatedPremium = parseFloat(application.quoteData?.estimatedPremium);
+        if (isNaN(estimatedPremium)) {
+          toast.error('Estimated premium is not a valid number.');
+          return;
+        }
+        const amountToSend = Math.round(estimatedPremium * 100);
+
+        const policyIdToSend = application.policyInfo?._id;
+        if (!policyIdToSend) {
+          toast.error('Policy ID is missing from application data.');
+          return;
+        }
+
         const paymentIntentResponse = await axiosPublic.post(`${import.meta.env.VITE_API_URL}/payments/create-payment-intent`, {
-          amount: Math.round(parseFloat(application.quoteData.estimatedPremium) * 100), // Use estimatedPremium from fetched application
-          policyId: application.policyId,
+          amount: amountToSend,
+          policyId: policyIdToSend,
           applicationId: application._id,
         }, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -148,9 +158,11 @@ const PaymentStep = () => {
   return (
     <div className="payment-step">
       {clientSecret ? (
-        <Elements options={options} stripe={stripePromise} key={isDarkMode ? 'dark' : 'light'}>
-          <CheckoutForm applicationId={applicationId} isDarkMode={isDarkMode} />
-        </Elements>
+        <div className="max-w-md mx-auto p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md text-gray-900 dark:text-white">
+          <Elements options={options} stripe={stripePromise} key={isDarkMode ? 'dark' : 'light'}>
+            <CheckoutForm applicationId={applicationId} isDarkMode={isDarkMode} />
+          </Elements>
+        </div>
       ) : (
         <div className="text-center">
           <svg aria-hidden="true" role="status" className="inline w-8 h-8 me-3 text-gray-200 animate-spin dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

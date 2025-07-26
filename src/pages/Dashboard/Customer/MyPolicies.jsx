@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
-
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,7 @@ const MyPolicies = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [openReviewModal, setOpenReviewModal] = useState(false);
   const [selectedPolicyForReview, setSelectedPolicyForReview] = useState(null);
   const [reviewRating, setReviewRating] = useState(0);
@@ -24,6 +25,7 @@ const MyPolicies = () => {
       const response = await axiosPublic.get('/applications/my-applications', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
+      console.log('My Applications data:', response.data);
       return response.data;
     },
     enabled: !!user?._id, // Only run query if user ID is available
@@ -170,7 +172,7 @@ const MyPolicies = () => {
                   <td className="px-1 py-4 whitespace-normal">{app.paymentStatus}</td>
                   <td className="px-4 py-4">
                     <div className="flex flex-wrap gap-1">
-                      {app.status === 'Approved' && (
+                      {app.status === 'Approved' && app.paymentStatus === 'Paid' && (
                         <>
                           <button type="button" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 whitespace-normal min-w-[70px] text-center" onClick={() => handleGiveReview(app)}>Give<br/>Review</button>
                           <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 whitespace-normal min-w-[70px] text-center" onClick={() => handleDownloadPolicy(app)}>Download<br/>Policy</button>
