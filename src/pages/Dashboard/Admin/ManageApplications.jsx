@@ -14,6 +14,7 @@ const ManageApplications = () => {
   const [feedback, setFeedback] = useState('');
   const [assignAgentModal, setAssignAgentModal] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState('');
+  const [isViewOnly, setIsViewOnly] = useState(false);
 
   const axiosPublic = useAxiosPublic();
   const { data: applications, isLoading, isError } = useQuery({
@@ -67,7 +68,9 @@ const ManageApplications = () => {
 
   const handleViewDetails = (application) => {
     setSelectedApplication(application);
-    setOpenModal(true);
+    setStatus(application.status); // Set initial status for display
+    setIsViewOnly(true); // Set to view only
+    setOpenModal(true); // Open the modal
   };
 
   const handleAssignAgent = (application) => {
@@ -127,6 +130,8 @@ const ManageApplications = () => {
                   <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={() => {
                     setSelectedApplication(app);
                     setStatus(app.status);
+                    setFeedback(app.feedback || ''); // Set feedback if available
+                    setIsViewOnly(false); // Not view only
                     setOpenModal(true);
                   }}>Update Status</button>
                   <button type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800" onClick={() => handleAssignAgent(app)}>Assign Agent</button>
@@ -168,15 +173,17 @@ const ManageApplications = () => {
                       <p><strong>Allergies:</strong> {selectedApplication.healthDisclosure?.allergies || 'None'}</p>
                       <p><strong>Medications:</strong> {selectedApplication.healthDisclosure?.medications || 'None'}</p>
 
-                      <div className="mt-4">
-                        <label htmlFor="status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Update Status</label>
-                        <select id="status" value={status} onChange={(e) => setStatus(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option value="Pending">Pending</option>
-                          <option value="Approved">Approved</option>
-                          <option value="Rejected">Rejected</option>
-                        </select>
-                      </div>
-                      {(status === 'Rejected' || selectedApplication?.status === 'Rejected') && ( // Always show feedback if status is Rejected or was previously Rejected
+                      {!isViewOnly && (
+                        <div className="mt-4">
+                          <label htmlFor="status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Update Status</label>
+                          <select id="status" value={status} onChange={(e) => setStatus(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="Pending">Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                          </select>
+                        </div>
+                      )}
+                      {!isViewOnly && (status === 'Rejected' || selectedApplication?.status === 'Rejected') && (
                         <div className="mt-4">
                           <label htmlFor="feedback" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rejection Feedback</label>
                           <textarea id="feedback" value={feedback} onChange={(e) => setFeedback(e.target.value)} rows="3" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
@@ -187,8 +194,10 @@ const ManageApplications = () => {
                 )}
               </div>
               <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
-                <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleStatusUpdate}>Save Changes</button>
-                <button type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onClick={() => setOpenModal(false)}>Cancel</button>
+                {!isViewOnly && (
+                  <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleStatusUpdate}>Save Changes</button>
+                )}
+                <button type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" onClick={() => setOpenModal(false)}>Close</button>
               </div>
             </div>
           </div>
