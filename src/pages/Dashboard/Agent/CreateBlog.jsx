@@ -33,7 +33,7 @@ const CreateBlog = () => {
   return (
     <div className="container mx-auto px-4 pt-0 pb-4">
       <h1 className="text-4xl font-bold text-center mb-4 dark:text-white">Create New Blog Post</h1>
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>

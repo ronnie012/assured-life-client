@@ -8,8 +8,8 @@ const AgentDashboardLayout = () => {
     `flex items-center p-2 text-base font-normal rounded-lg ${isActive ? 'text-white bg-gray-700' : 'text-white hover:bg-gray-700'}`;
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-      <nav className="flex flex-col p-4 bg-gray-800 dark:bg-gray-950 text-white w-64 space-y-2">
+    <div className="flex h-screen bg-gray-200 dark:bg-gray-800 rounded-lg">
+      <nav className="flex flex-col p-4 bg-gray-800 dark:bg-gray-950 text-white w-64 space-y-2 rounded-tl-lg rounded-bl-lg">
         <ul className="space-y-2">
           <li>
             <NavLink to="/agent/dashboard" end className={getNavLinkClass}>
@@ -43,7 +43,7 @@ const AgentDashboardLayout = () => {
           </li>
         </ul>
       </nav>
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-6 rounded-lg rounded-tr-lg rounded-br-lg">
         <Outlet />
       </div>
     </div>
