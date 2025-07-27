@@ -13,29 +13,29 @@ const ClaimRequestForm = () => {
 
   // Fetch user's approved policies to allow claim submission
   const { data: approvedPolicies, isLoading: isLoadingPolicies, isError: isErrorPolicies } = useQuery({
-    queryKey: ['approvedPoliciesForClaim', user?._id],
+    queryKey: ['approvedPoliciesForClaim', user?.uid],
     queryFn: async () => {
-      if (!user?._id) return [];
+      if (!user?.uid) return [];
       const response = await axiosPublic.get('/applications/my-applications', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       // Filter for approved policies only
-      return response.data.filter(app => app.status === 'Approved');
+      return response.data.filter(app => app.status?.toLowerCase() === 'approved');
     },
-    enabled: !!user?.userId,
+    enabled: !!user?.uid,
   });
 
   // Fetch user's existing claims
   const { data: userClaims, isLoading: isLoadingClaims, isError: isErrorClaims } = useQuery({
-    queryKey: ['userClaims', user?._id],
+    queryKey: ['userClaims', user?.uid],
     queryFn: async () => {
-      if (!user?._id) return [];
+      if (!user?.uid) return [];
       const response = await axiosPublic.get('/claims/my-claims', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       return response.data;
     },
-    enabled: !!user?.userId,
+    enabled: !!user?.uid,
   });
 
   const onSubmit = async (data) => {
@@ -66,7 +66,7 @@ const ClaimRequestForm = () => {
         title: 'Claim Submitted!',
         text: response.data.message,
         showConfirmButton: false,
-        timer: 1500
+        timer: 3000
       });
       reset();
     } catch (error) {
