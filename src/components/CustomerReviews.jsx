@@ -25,8 +25,8 @@ const CustomerReviews = () => {
   return (
     <div className="my-12">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold">What Our Customers Say</h2>
-        <p className="text-gray-500">Read what our satisfied customers have to say about our services.</p>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">What Our Customers Say</h2>
+        <p className="text-gray-500 text-lg">Read what our satisfied customers have to say about our services.</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {reviews.map((review) => (

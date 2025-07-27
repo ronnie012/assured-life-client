@@ -36,6 +36,7 @@ const Blog = () => {
       <div role="status" className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
         <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
       </div>
+      <p className="text-red-600 text-5xl font-bold mt-4">Loading blogs...</p>
     </div>
   );
   if (isError) return <div className="text-center mt-10 text-red-600">Error loading blogs.</div>;

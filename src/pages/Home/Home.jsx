@@ -109,23 +109,23 @@ const Home = () => {
       </Swiper>
 
       {/* Popular Policies Section */}
-      <section className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800 rounded-2xl mt-8">
+      <section className="max-w-7xl mx-auto py-1 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800 rounded-2xl mt-8">
         <PopularPolicies />
       </section>
 
       {/* Customer Reviews Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 mt-8 ml-4">
         <CustomerReviews />
       </div>
 
       {/* Latest Blog/Articles Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 ml-1">
         <LatestBlogs />
       </div>
 
       {/* Newsletter Subscription Section */}
       <section className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-gray-100 dark:bg-gray-800 rounded-2xl mt-8 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold mb-8">Subscribe to Our Newsletter</h2>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-8">Subscribe to Our Newsletter</h2>
         <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-8">Stay updated with the latest insurance tips and offers.</p>
         <form onSubmit={handleSubmit(onSubmitNewsletter)} className="max-w-md mx-auto bg-white dark:bg-gray-700 p-6 sm:p-8 rounded-lg shadow-md dark:border dark:border-gray-600">
           <div className="mb-4">
@@ -151,9 +151,9 @@ const Home = () => {
       </section>
 
       {/* Meet Our Agents Section */}
-      <section className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+      <section className="max-w-7xl mx-auto py-12 px-0 sm:px-0 lg:px-0 bg-white dark:bg-gray-900 ml-1">
         <div className=" mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">Meet Our Agents</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-12">Meet Our Agents</h2>
           {isLoadingAgents ? (
             <div>Loading agents...</div>
           ) : isErrorAgents ? (

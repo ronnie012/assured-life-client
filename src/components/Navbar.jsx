@@ -27,7 +27,7 @@ export default function AppNavbar() {
     }`;
 
   return (
-    <Disclosure as="nav" className="bg-white dark:bg-gray-900 sticky top-0 z-50 backdrop-blur-lg bg-opacity-80 dark:bg-opacity-80 border-b border-gray-200 dark:border-gray-700">
+    <Disclosure as="nav" className="bg-white dark:bg-gray-900 sticky top-0 z-50 backdrop-blur-lg bg-opacity-10 dark:bg-opacity-10 border mt-2 border-gray-200 dark:border-gray-700 max-w-7xl ml-9 rounded-lg">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

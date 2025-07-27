@@ -36,8 +36,8 @@ const PopularPolicies = () => {
   return (
     <div className="my-12">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold">Popular Policies</h2>
-        <p className="text-gray-500">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Popular Policies</h2>
+        <p className="text-gray-500 text-lg">
           Explore our most sought-after life insurance policies.
         </p>
       </div>
