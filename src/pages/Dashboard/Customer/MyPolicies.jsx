@@ -121,8 +121,8 @@ const MyPolicies = () => {
   if (isError) return <div className="text-center mt-10 text-red-600">Error loading policies. Please ensure your backend is running and accessible, and that the API endpoint returns a valid response.</div>;
 
   return (
-    <div className="mx-auto py-8">
-      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">My Policies</h1>
+    <div className="mx-auto pt-0 py-8">
+      <h1 className="text-4xl font-bold text-center mb-4 dark:text-white">My Policies</h1>
 
       <div className="relative shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -146,7 +146,9 @@ const MyPolicies = () => {
                     {app.policyName}
                   </th>
                   <td className="px-4 py-4">
-                    {app.status}
+                    <span className={`px-3 py-1 rounded-md text-white font-medium ${app.status === 'Approved' ? 'bg-green-500' : app.status === 'Pending' ? 'bg-orange-500' : 'bg-red-500'}`}>
+                      {app.status}
+                    </span>
                     {app.status === 'Rejected' && app.feedback && (
                       <p className="text-red-500 text-xs mt-1">Feedback: {app.feedback}</p>
                     )}
@@ -169,7 +171,11 @@ const MyPolicies = () => {
                   <td className="px-4 py-4">{app.quoteData?.duration ? `${app.quoteData.duration} Years` : 'N/A'}</td>
                   <td className="px-4 py-4">{app.quoteData?.estimatedPremium ? `$ ${app.quoteData.estimatedPremium}` : 'N/A'}</td>
                   <td className="px-1 py-4 whitespace-normal">{new Date(app.submittedAt).toLocaleDateString()}</td>
-                  <td className="px-1 py-4 whitespace-normal">{app.paymentStatus}</td>
+                  <td className="px-1 py-4 whitespace-normal">
+                    <span className={`px-3 py-1 rounded-md text-white font-medium ${app.paymentStatus === 'Paid' ? 'bg-green-500' : app.paymentStatus === 'Due' ? 'bg-orange-500' : 'bg-red-500'}`}>
+                      {app.paymentStatus}
+                    </span>
+                  </td>
                   <td className="px-4 py-4">
                     <div className="flex flex-wrap gap-4">
                       {app.status === 'Approved' && app.paymentStatus === 'Paid' && (

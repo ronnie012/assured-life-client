@@ -40,8 +40,8 @@ const PaymentStatus = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Payment Status</h1>
+    <div className="container mx-auto px-4 pt-0 pb-8">
+      <h1 className="text-4xl font-bold text-center mb-4">Payment Status</h1>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -63,7 +63,11 @@ const PaymentStatus = () => {
                   </th>
                   <td className="px-6 py-4">{`$ ${app.quoteData?.estimatedPremium ? (app.quoteData.estimatedPremium).toFixed(2) : 'N/A'}`}</td>
                   <td className="px-6 py-4">Monthly</td>
-                  <td className="px-6 py-4">{app.paymentStatus}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-md text-white font-medium ${app.paymentStatus === 'Paid' ? 'bg-green-500' : app.paymentStatus === 'Due' ? 'bg-orange-500' : 'bg-red-500'}`}>
+                      {app.paymentStatus}
+                    </span>
+                  </td>
                   <td className="px-6 py-4">
                     {app.paymentStatus === 'Due' && (
                       <Link to={`/apply/payment/${app._id}`} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 whitespace-normal min-w-[70px] text-center">Pay Now</Link>

@@ -80,7 +80,7 @@ const ProfilePage = () => {
 
   return (
     <div class="container mx-auto px-4 py-2 dark:bg-gray-900">
-      <h1 className="text-5xl font-bold text-center">My Profile</h1>
+      <h1 className="text-5xl font-bold text-center mb-4">My Profile</h1>
       <div class="max-w-xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
                 <img src={user?.photoURL || `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=random&color=fff`} alt="User Avatar" class="w-24 h-24 rounded-full mx-auto mb-4" />
         
