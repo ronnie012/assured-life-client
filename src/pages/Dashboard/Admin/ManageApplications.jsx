@@ -100,8 +100,8 @@ const ManageApplications = () => {
   if (isError) return <div className="text-center mt-10 text-red-600">Error loading applications.</div>;
 
   return (
-    <div className="container mx-auto px-4 py-2">
-      <h1 className="text-4xl font-bold text-center mb-8">Manage Applications</h1>
+    <div className="container mx-auto px-4 pt-0 pb-8">
+      <h1 className="text-4xl font-bold text-center mb-4">Manage Applications</h1>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -124,7 +124,11 @@ const ManageApplications = () => {
                 <td className="px-6 py-4">{app.applicantEmail}</td>
                 <td className="px-6 py-4">{app.policyName}</td>
                 <td className="px-6 py-4">{new Date(app.submittedAt).toLocaleDateString()}</td>
-                <td className="px-6 py-4">{app.status}</td>
+                <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-md text-white font-medium ${app.status === 'Approved' ? 'bg-green-500' : app.status === 'Pending' ? 'bg-orange-500' : 'bg-red-500'}`}>
+                      {app.status}
+                    </span>
+                </td>
                 <td className="px-6 py-4 flex gap-2">
                   <button type="button" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => handleViewDetails(app)}>View Details</button>
                   <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={() => {

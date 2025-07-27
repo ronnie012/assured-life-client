@@ -108,8 +108,8 @@ const ManageAgents = () => {
   if (isErrorPending || isErrorApproved) return <div className="text-center mt-10 text-red-600">Error loading agent data.</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Manage Agents</h1>
+    <div className="container mx-auto px-4 pt-0 pb-8">
+      <h1 className="text-4xl font-bold text-center mb-4">Manage Agents</h1>
 
       <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
         <ul className="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">

@@ -59,8 +59,8 @@ const ManageUsers = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Manage Users</h1>
+    <div className="container mx-auto px-4 pt-0 pb-8">
+      <h1 className="text-4xl font-bold text-center mb-4">Manage Users</h1>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

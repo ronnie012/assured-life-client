@@ -143,8 +143,8 @@ const ManagePolicies = () => {
   if (isError) return <div className="text-center mt-10 text-red-600">Error loading policies.</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Manage Policies</h1>
+    <div className="container mx-auto px-4 pt-0 pb-8">
+      <h1 className="text-4xl font-bold text-center mb-4">Manage Policies</h1>
 
       <div className="flex justify-end mb-4">
         <button type="button" className="text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" onClick={handleAddPolicy}>Add New Policy</button>

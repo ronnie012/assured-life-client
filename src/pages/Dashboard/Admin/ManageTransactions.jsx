@@ -49,8 +49,8 @@ const ManageTransactions = () => {
   const chartData = processChartData(transactions);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">Manage Transactions</h1>
+    <div className="container mx-auto px-4 pt-0 pb-8">
+      <h1 className="text-4xl font-bold text-center mb-4 dark:text-white">Manage Transactions</h1>
 
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-center mb-4 dark:text-white">Total Earnings Over Time</h2>
