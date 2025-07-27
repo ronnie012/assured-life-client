@@ -79,7 +79,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'profile',
-        element: <PrivateRoute requiredRole="customer"><ProfilePage /></PrivateRoute>,
+        element: <PrivateRoute><ProfilePage /></PrivateRoute>,
       },
       {
         path: 'apply/payment/:applicationId',
