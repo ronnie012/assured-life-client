@@ -103,9 +103,9 @@ const ManageApplications = () => {
     <div className="container mx-auto px-4 pt-0 pb-8">
       <h1 className="text-4xl font-bold text-center mb-4">Manage Applications</h1>
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-auto shadow-xl sm:rounded-lg border border-gray-200 dark:border-gray-700">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <thead className="text-xs uppercase bg-gray-300 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
             <tr>
               <th scope="col" className="px-6 py-3">Applicant Name</th>
               <th scope="col" className="px-6 py-3">Applicant Email</th>

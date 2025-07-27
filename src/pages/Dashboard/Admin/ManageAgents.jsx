@@ -143,9 +143,9 @@ const ManageAgents = () => {
       </div>
       <div id="default-tab-content">
         <div className={`${activeTab === 'pending' ? '' : 'hidden'} p-4 rounded-lg bg-gray-50 dark:bg-gray-800`} id="pending" role="tabpanel" aria-labelledby="pending-tab">
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <div className="relative overflow-x-auto shadow-xl sm:rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <thead className="text-xs uppercase bg-gray-300 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                 <tr>
                   <th scope="col" className="px-6 py-3">Name</th>
                   <th scope="col" className="px-6 py-3">Email</th>
@@ -174,9 +174,9 @@ const ManageAgents = () => {
           </div>
         </div>
         <div className={`${activeTab === 'approved' ? '' : 'hidden'} p-4 rounded-lg bg-gray-50 dark:bg-gray-800`} id="approved" role="tabpanel" aria-labelledby="approved-tab">
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <div className="relative overflow-x-auto shadow-xl sm:rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <thead className="text-xs uppercase bg-gray-300 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                 <tr>
                   <th scope="col" className="px-6 py-3">Name</th>
                   <th scope="col" className="px-6 py-3">Email</th>
@@ -195,7 +195,7 @@ const ManageAgents = () => {
                     <td className="px-6 py-4">{agent.experience}</td>
                     <td className="px-6 py-4">{Array.isArray(agent.specialties) ? agent.specialties.join(', ') : 'N/A'}</td>
                     <td className="px-6 py-4">
-                      <button type="button" className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-yellow-900" onClick={() => demoteAgentMutation.mutate(agent.userId)}>Demote to Customer</button>
+                      <button type="button" className="focus:outline-none text-white bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 py-2 dark:focus:ring-orange-900" onClick={() => demoteAgentMutation.mutate(agent.userId)}>Demote to Customer</button>
                     </td>
                   </tr>
                 ))}

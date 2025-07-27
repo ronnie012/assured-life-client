@@ -8,8 +8,8 @@ const AdminDashboardLayout = () => {
   const normalLink = 'flex items-center p-2 text-base font-normal text-white rounded-lg hover:bg-gray-700';
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-      <nav className="flex flex-col p-4 bg-gray-800 dark:bg-gray-950 text-white w-64 space-y-2">
+    <div className="flex h-screen bg-gray-200 dark:bg-gray-800 rounded-lg">
+      <nav className="flex flex-col p-4 bg-gray-800 dark:bg-gray-950 text-white w-64 space-y-2 rounded-tl-lg rounded-bl-lg">
         <ul className="space-y-2">
           <li>
             <NavLink to="/admin/dashboard" end className={({ isActive }) => isActive ? activeLink : normalLink}>
@@ -61,7 +61,7 @@ const AdminDashboardLayout = () => {
           </li>
         </ul>
       </nav>
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-6 rounded-lg">
         <Outlet />
       </div>
     </div>
