@@ -5,7 +5,7 @@ import { HiChartPie, HiViewBoards, HiInbox, HiUser, HiDocumentText, HiClipboardC
 
 const AgentDashboardLayout = () => {
   const getNavLinkClass = ({ isActive }) =>
-    `flex items-center p-2 text-base font-normal rounded-lg ${isActive ? 'text-white bg-blue-700' : 'text-white hover:bg-gray-700'}`;
+    `flex items-center p-2 text-base font-normal rounded-lg ${isActive ? 'text-white bg-gray-700' : 'text-white hover:bg-gray-700'}`;
 
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
