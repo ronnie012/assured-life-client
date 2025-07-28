@@ -1,7 +1,9 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Cell } from 'recharts';
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28DFF', '#FF6666', '#66CCFF', '#FFD700'];
 
 const ManageTransactions = () => {
   const axiosPublic = useAxiosPublic();
@@ -30,7 +32,7 @@ const ManageTransactions = () => {
         if (!monthlyData[monthYear]) {
           monthlyData[monthYear] = 0;
         }
-        monthlyData[monthYear] += transaction.amount;
+        monthlyData[monthYear] += transaction.amount / 100;
       }
     });
 
@@ -71,7 +73,11 @@ const ManageTransactions = () => {
             </YAxis>
             <Tooltip wrapperStyle={{ zIndex: 1000 }} />
             <Legend />
-            <Bar dataKey="totalAmount" fill="#8884d8" name="Total Amount" />
+            <Bar dataKey="totalAmount" name="Total Amount" >
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -112,7 +118,7 @@ const ManageTransactions = () => {
                   </th>
                   <td className="px-6 py-4">{transaction.userEmail}</td>
                   <td className="px-6 py-4">{transaction.policyName}</td>
-                  <td className="px-6 py-4">{transaction.amount} {transaction.currency}</td>
+                  <td className="px-6 py-4">{(transaction.amount / 100).toFixed(2)} {transaction.currency}</td>
                   <td className="px-6 py-4">{transaction.createdAt ? new Date(transaction.createdAt).toLocaleDateString() : 'N/A'}</td>
                   <td className="px-6 py-4">{transaction.status}</td>
                 </tr>

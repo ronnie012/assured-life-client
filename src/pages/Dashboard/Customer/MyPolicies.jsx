@@ -135,6 +135,7 @@ const MyPolicies = () => {
               <th scope="col" className="px-4 py-3">Premium</th>
               <th scope="col" className="px-1 py-3 whitespace-normal">Application Date</th>
               <th scope="col" className="px-1 py-3 whitespace-normal">Payment Status</th>
+              <th scope="col" className="px-1 py-3">Claim Status</th>
               <th scope="col" className="px-4 py-3">Actions</th>
             </tr>
           </thead>
@@ -146,25 +147,11 @@ const MyPolicies = () => {
                     {app.policyName}
                   </th>
                   <td className="px-4 py-4">
-                    <span className={`px-3 py-1 rounded-md text-white font-medium ${app.status === 'Approved' ? 'bg-green-500' : app.status === 'Pending' ? 'bg-orange-500' : 'bg-red-500'}`}>
+                    <span className={`px-1 py-1 rounded-md text-white font-medium ${app.status === 'Approved' ? 'bg-green-500' : app.status === 'Pending' ? 'bg-orange-500' : 'bg-red-500'}`}>
                       {app.status}
                     </span>
                     {app.status === 'Rejected' && app.feedback && (
                       <p className="text-red-500 text-xs mt-1">Feedback: {app.feedback}</p>
-                    )}
-                    {app.claimStatus === 'Approved' && (
-                      <button
-                        type="button"
-                        className="ml-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                        onClick={() => Swal.fire({
-                          icon: 'info',
-                          title: 'Claim Approved!',
-                          text: 'Your claim for this policy has been approved. Please contact our agent for further details.',
-                          confirmButtonText: 'OK'
-                        })}
-                      >
-                        Claim Approved
-                      </button>
                     )}
                   </td>
                   <td className="px-4 py-4">{app.quoteData?.coverageAmount ? `$ ${app.quoteData.coverageAmount}` : 'N/A'}</td>
@@ -176,18 +163,42 @@ const MyPolicies = () => {
                       {app.paymentStatus}
                     </span>
                   </td>
+                  <td className="px-1 py-4">
+                    {app.claimStatus ? (
+                      app.claimStatus === 'Approved' ? (
+                        <button
+                          type="button"
+                          className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                          onClick={() => Swal.fire({
+                            icon: 'info',
+                            title: 'Claim Approved!',
+                            text: 'Your claim for this policy has been approved. Please contact our agent for further details.',
+                            confirmButtonText: 'OK'
+                          })}
+                        >
+                          Claim Approved
+                        </button>
+                      ) : (
+                        <span className="px-3 py-1 rounded-md text-white font-medium bg-orange-500">
+                          {app.claimStatus}
+                        </span>
+                      )
+                    ) : (
+                      'N/A'
+                    )}
+                  </td>
                   <td className="px-4 py-4">
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex gap-2">
                       {app.status === 'Approved' && app.paymentStatus === 'Paid' && (
-                        <button type="button" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 whitespace-normal min-w-[70px] text-center" onClick={() => handleGiveReview(app)}>Give<br/>Review</button>
+                        <button type="button" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 min-w-[70px] text-center" onClick={() => handleGiveReview(app)}>Give<br/>Review</button>
                       )}
                       {app.status === 'Approved' && (
-                        <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-6 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 whitespace-normal min-w-[70px] text-center" onClick={() => handleDownloadPolicy(app)}>Download<br/>Policy</button>
+                        <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 min-w-[70px] text-center" onClick={() => handleDownloadPolicy(app)}>Download<br/>Policy</button>
                       )}
                       {app.status === 'Approved' && app.paymentStatus === 'Due' && (
                         <button
                           type="button"
-                          className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 whitespace-normal min-w-[70px] text-center"
+                          className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-xs px-1 py-1.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 min-w-[70px] text-center"
                           onClick={() => navigate(`/apply/payment/${app._id}`)}
                         >
                           Pay<br/>Now

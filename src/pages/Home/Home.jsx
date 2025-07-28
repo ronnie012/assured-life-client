@@ -29,7 +29,7 @@ const Home = () => {
     },
   });
 
-  const { data: featuredAgents, isLoading: isLoadingAgents, isError: isErrorAgents } = useQuery({
+  const { data: featuredAgents = [], isLoading: isLoadingAgents, isError: isErrorAgents } = useQuery({
     queryKey: ['featuredAgents'],
     queryFn: async () => {
       const response = await axiosPublic.get('/agents/featured');
