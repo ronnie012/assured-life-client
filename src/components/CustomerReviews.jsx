@@ -3,6 +3,17 @@ import { useQuery } from "@tanstack/react-query";
 import ReviewCard from "./ReviewCard";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
+// import required modules
+import { Pagination, Navigation, Autoplay } from "swiper/modules";
+
 const CustomerReviews = () => {
   const axiosPublic = useAxiosPublic();
 
@@ -22,17 +33,50 @@ const CustomerReviews = () => {
     );
   }
 
+  // Limit reviews to 5 as per requirement
+  const displayedReviews = reviews.slice(0, 5);
+
   return (
     <div className="my-12">
       <div className="text-center mb-8">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">What Our Customers Say</h2>
         <p className="text-gray-500 text-lg">Read what our satisfied customers have to say about our services.</p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {reviews.map((review) => (
-          <ReviewCard key={review._id} review={review} />
+      <Swiper
+        slidesPerView={1}
+        spaceBetween={30}
+        loop={true}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+        }}
+        navigation={true}
+        modules={[Autoplay, Pagination, Navigation]}
+        breakpoints={{
+          640: {
+            slidesPerView: 1,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 40,
+          },
+          1024: {
+            slidesPerView: 3,
+            spaceBetween: 50,
+          },
+        }}
+        className="mySwiper"
+      >
+        {displayedReviews.map((review) => (
+          <SwiperSlide key={review._id}>
+            <ReviewCard review={review} />
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
     </div>
   );
 };

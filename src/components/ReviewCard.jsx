@@ -3,7 +3,7 @@ import React from 'react';
 
 const ReviewCard = ({ review }) => {
   return (
-    <div className="max-w-sm text-center p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+    <div className="max-w-sm text-center p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transition-all duration-300 hover:scale-105 hover:shadow-xl min-h-[250px] flex flex-col justify-between">
       <img className="w-20 h-20 rounded-full mx-auto mb-4" src={review.userImage || "https://flowbite.com/docs/images/people/profile-picture-5.jpg"} alt="User Avatar" />
       <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
         {review.userName}
