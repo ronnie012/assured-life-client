@@ -101,17 +101,34 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
+    const firebaseAuth = getAuth();
     try {
-      const firebaseAuth = getAuth();
-      const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
-      await userCredential.user.updateProfile({
-        displayName: userData.name || userData.email.split('@')[0] || 'User',
-        photoURL: userData.photoURL || '',
-      });
+      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, userData.email, userData.password);
+      // After creating the user, update their profile.
+      // The `currentUser` object is the source of truth after creation.
+      if (firebaseAuth.currentUser) {
+        try {
+          await updateProfile(firebaseAuth.currentUser, {
+            displayName: userData.name || userData.email.split('@')[0] || 'User',
+            photoURL: userData.photoURL || '',
+          });
+        } catch (updateError) {
+          console.error('Profile update failed after registration:', updateError);
+          toast.error('Could not set user profile information.');
+          // The user is created, but the profile update failed.
+          // The onAuthStateChanged listener will still handle the login.
+        }
+      }
       return userCredential;
     } catch (error) {
-      console.error('Registration failed:', error.response?.data || error.message);
-      throw error;
+      console.error('Registration failed:', error.message);
+      // Provide user-friendly error messages
+      if (error.code === 'auth/email-already-in-use') {
+        toast.error('This email is already registered. Please log in or use a different email.');
+      } else {
+        toast.error(error.message || 'Registration failed. Please try again.');
+      }
+      throw error; // Re-throw the error to be caught by the calling component if needed
     }
   };
 
