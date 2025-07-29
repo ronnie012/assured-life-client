@@ -28,3 +28,6 @@ dist-ssr
 
 # Local settings
 console.terminal.output.md
+
+# Firebase
+.firebase/
