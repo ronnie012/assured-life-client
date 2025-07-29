@@ -28,16 +28,16 @@ export const AuthProvider = ({ children }) => {
           const userInfo = {
             uid: currentUser.uid,
             email: currentUser.email,
-            name: currentUser.displayName || currentUser.email.split('@')[0] || 'User',
-            photoURL: currentUser.photoURL || '',
+            name: currentUser.displayName || currentUser.email.split('@')[0] || '', // Ensure name is always set
+            photoURL: currentUser.photoURL || '', // Ensure photoURL is always set, even if empty
           };
           const response = await axiosPublic.post('/users/upsertFirebaseUser', userInfo);
           console.log('onAuthStateChanged - backend upsert response:', response.data);
           const mergedUserData = {
             ...response.data,
             uid: currentUser.uid, // Ensure Firebase UID is available as user.uid
-            name: response.data.name || currentUser.displayName || currentUser.email.split('@')[0] || 'User',
-            photoURL: currentUser.photoURL || response.data.photoURL || '',
+            name: response.data.name, // Trust backend for name
+            photoURL: response.data.photoURL, // Trust backend for photoURL
           };
           console.log('AuthProvider: Merged user data before setting state:', mergedUserData);
           setUser(mergedUserData);
@@ -87,8 +87,22 @@ export const AuthProvider = ({ children }) => {
   const googleSignIn = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        toast.success('Login successful!');
+      .then(async (result) => {
+        const currentUser = result.user;
+        const userInfo = {
+          uid: currentUser.uid,
+          email: currentUser.email,
+          name: currentUser.displayName || currentUser.email.split('@')[0] || '', // Ensure name is always set
+          photoURL: currentUser.photoURL || '', // Ensure photoURL is always set, even if empty
+        };
+        try {
+          const response = await axiosPublic.post('/users/upsertFirebaseUser', userInfo);
+          setUser(response.data); // Update frontend user state with data from backend
+          toast.success('Login successful!');
+        } catch (backendError) {
+          console.error('Failed to upsert user data to backend after Google login:', backendError);
+          toast.error('Google login successful, but failed to sync profile data.');
+        }
         return result;
       })
       .catch((error) => {
@@ -104,19 +118,27 @@ export const AuthProvider = ({ children }) => {
     const firebaseAuth = getAuth();
     try {
       const userCredential = await createUserWithEmailAndPassword(firebaseAuth, userData.email, userData.password);
-      // After creating the user, update their profile.
-      // The `currentUser` object is the source of truth after creation.
+      // After creating the user, update their profile in Firebase Auth
       if (firebaseAuth.currentUser) {
         try {
           await updateProfile(firebaseAuth.currentUser, {
             displayName: userData.name || userData.email.split('@')[0] || 'User',
             photoURL: userData.photoURL || '',
           });
+
+          // Immediately upsert user data to backend after Firebase profile update
+          const userInfoForBackend = {
+            uid: firebaseAuth.currentUser.uid,
+            email: firebaseAuth.currentUser.email,
+            name: userData.name || firebaseAuth.currentUser.displayName, // Use provided name or Firebase displayName
+            photoURL: userData.photoURL || firebaseAuth.currentUser.photoURL, // Use provided photoURL or Firebase photoURL
+          };
+          const response = await axiosPublic.post('/users/upsertFirebaseUser', userInfoForBackend);
+          setUser(response.data); // Update frontend user state with data from backend
+
         } catch (updateError) {
-          console.error('Profile update failed after registration:', updateError);
-          toast.error('Could not set user profile information.');
-          // The user is created, but the profile update failed.
-          // The onAuthStateChanged listener will still handle the login.
+          console.error('Profile update or backend upsert failed after registration:', updateError);
+          toast.error('Could not set user profile information or sync with backend.');
         }
       }
       return userCredential;

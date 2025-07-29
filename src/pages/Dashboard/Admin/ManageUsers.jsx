@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import { useAuth } from '../../../contexts/AuthProvider';
 
 const ManageUsers = () => {
@@ -36,12 +37,36 @@ const ManageUsers = () => {
     },
   });
 
-  const handleRoleChange = (userId, newRole) => {
-    if (currentUser._id === userId) {
-      toast.error('You cannot change your own role.');
-      return;
-    }
-    updateUserRoleMutation.mutate({ id: userId, role: newRole });
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId) => {
+      await axiosPublic.delete(`/users/${userId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['users']);
+      toast.success('User deleted successfully!');
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Failed to delete user.');
+    },
+  });
+
+  const handleDeleteUser = (userId) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log('Attempting to delete user with ID:', userId);
+        deleteUserMutation.mutate(userId);
+      }
+    });
   };
 
   if (isLoading) return (
@@ -96,7 +121,7 @@ const ManageUsers = () => {
                 <td className="px-6 py-4">{user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'N/A'}</td>
                 <td className="px-6 py-4">
                   {/* Optional: Delete user button */}
-                  <button type="button" className={`focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 ${ (String(currentUser._id) === String(user._id) || user.role === 'admin') ? 'opacity-50 cursor-not-allowed' : '' }`} disabled={String(currentUser._id) === String(user._id) || user.role === 'admin'}>Delete</button>
+                  <button type="button" className={`focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 ${ (String(currentUser._id) === String(user._id) || user.role === 'admin') ? 'opacity-50 cursor-not-allowed' : '' }`} disabled={String(currentUser._id) === String(user._id) || user.role === 'admin'} onClick={() => handleDeleteUser(user._id)}>Delete</button>
                 </td>
               </tr>
             ))}
