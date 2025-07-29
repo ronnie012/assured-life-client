@@ -13,7 +13,7 @@ const AgentCard = ({ agent }) => {
         <strong>Experience:</strong> {agent.experience}
       </p>
       <p className="font-normal text-gray-700 dark:text-gray-400">
-        <strong>Specialties:</strong> {agent.specialties.join(', ')}
+        <strong>Specialties:</strong> {Array.isArray(agent.specialties) ? agent.specialties.join(', ') : 'N/A'}
       </p>
     </div>
   );
