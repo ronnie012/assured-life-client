@@ -84,14 +84,17 @@ const ClaimRequestForm = () => {
   );
   if (isErrorPolicies || isErrorClaims) return <div className="text-center mt-10 text-red-600">Error loading data for claim.</div>;
 
-  if (!isLoadingPolicies && approvedPolicies && approvedPolicies.length === 0) {
-    return <div className="text-center mt-10 text-gray-600">No approved policies found to claim against.</div>;
-  }
+  // Commented_to_visualize_the_claim_request_form_in_customer_dashboard_when_no_approved_policies_found_to_claim_against.
+  // Removed this early return and instead relied on the logic already present within the <tbody> to display the "No approved policies found" message inside a table row.
+  
+  // if (!isLoadingPolicies && approvedPolicies && approvedPolicies.length === 0) {
+  //   return <div className="text-center mt-10 text-gray-600">No approved policies found to claim against.</div>;
+  // }
 
   return (
     <div className="">
       <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">Claim Request Form</h1>
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md dark:border dark:border-gray-700">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label htmlFor="policyId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Policy for Claim</label>

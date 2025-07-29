@@ -35,15 +35,13 @@ const PaymentStatus = () => {
     return <div className="text-center mt-10 text-red-600">Error loading payment status. Please check console for details.</div>;
   }
 
-  if (!isLoading && applications && applications.length === 0) {
-    return <div className="text-center mt-10 text-gray-600">No approved policies found.</div>;
-  }
+  
 
   return (
     <div className="container mx-auto px-4 pt-0 pb-8">
       <h1 className="text-4xl font-bold text-center mb-4">Payment Status</h1>
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-auto shadow-xl sm:rounded-lg border border-gray-200 dark:border-gray-700">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs uppercase bg-gray-300 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
             <tr>
