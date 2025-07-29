@@ -21,6 +21,7 @@ const ManagePolicies = () => {
       console.log('ManagePolicies: Attempting to fetch policies.');
       const response = await axiosPublic.get('/policies', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        params: { limit: 0 }, // Fetch all policies for the admin view
       });
       console.log('ManagePolicies: Received policies data:', response.data);
       return response.data.policies; // Assuming the API returns an object with a 'policies' array

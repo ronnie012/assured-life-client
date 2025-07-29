@@ -84,9 +84,10 @@ const AllPolicies = () => {
         <select value={category} onChange={handleCategoryChange} className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600">
           <option value="All" className="dark:bg-gray-700 dark:text-white">All Categories</option>
           <option value="Term Life" className="dark:bg-gray-700 dark:text-white">Term Life</option>
+          <option value="Final Expense Insurance" className="dark:bg-gray-700 dark:text-white">Final Expense Insurance</option>
           <option value="Whole Life" className="dark:bg-gray-700 dark:text-white">Whole Life</option>
-          <option value="Senior Plan" className="dark:bg-gray-700 dark:text-white">Senior Plan</option>
-          {/* Add more categories as needed */}
+          <option value="Universal Life" className="dark:bg-gray-700 dark:text-white">Universal Life</option>
+          <option value="Term Life (Rider)" className="dark:bg-gray-700 dark:text-white">Term Life (Rider)</option>
         </select>
       </div>
 
@@ -101,7 +102,7 @@ const AllPolicies = () => {
       </div>
 
       {totalPages > 1 && (
-        <nav aria-label="Page navigation example">
+        <nav aria-label="Page navigation example" className="flex justify-center mt-8">
           <ul className="flex items-center -space-x-px h-10 text-base">
             <li>
               <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} className="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</button>

@@ -44,9 +44,9 @@ const PolicyDetails = () => {
 
             <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-6">
               <li><span className="font-semibold">Eligibility:</span> Ages {policy.minAge} to {policy.maxAge}</li>
-              <li><span className="font-semibold">Coverage Range:</span> ${policy.coverageRange}</li>
+              <li><span className="font-semibold">Coverage Range:</span> {policy.coverageRange}</li>
               <li><span className="font-semibold">Term Duration Options:</span> {policy.durationOptions.replace(/,?\s*$/, '')}</li>
-              <li><span className="font-semibold">Base Premium Rate:</span> ${policy.basePremiumRate}</li>
+              <li><span className="font-semibold">Base Premium Rate:</span> {policy.basePremiumRate} USD Per Month.</li>
             </ul>
 
             <div className="flex flex-col sm:flex-row gap-4">

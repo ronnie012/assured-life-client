@@ -17,7 +17,7 @@ const PolicyCard = ({ policy }) => {
           {policy.title}
         </h5>
         <p className="font-normal text-gray-700 dark:text-gray-400 mb-1">
-          <span className="font-semibold">Coverage:</span> ${policy.coverageRange}
+          <span className="font-semibold">Coverage:</span> {policy.coverageRange}
         </p>
         <p className="font-normal text-gray-700 dark:text-gray-400 mb-1">
           <span className="font-semibold">Term:</span> {policy.durationOptions}
