@@ -30,7 +30,7 @@ const AgentApplicationForm = () => {
   return (
     <div className="">
       <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">Apply to be an Agent</h1>
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md dark:border dark:border-gray-700">
         <p className="text-gray-700 dark:text-gray-300 mb-6">
           Fill out the form below to apply to become an agent. Your application will be reviewed by an administrator.
         </p>
