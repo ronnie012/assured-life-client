@@ -6,9 +6,10 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { useAuth } from '../../contexts/AuthProvider';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateProfile } from 'firebase/auth';
 
 const ProfilePage = () => {
-  const { user, axiosPublic, setUser, refreshUser, firebaseUser } = useAuth();
+  const { user, axiosPublic, setUser, firebaseUser, updateProfile } = useAuth();
   console.log("ProfilePage - current user:", user);
   const queryClient = useQueryClient();
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -45,6 +46,13 @@ const ProfilePage = () => {
   const updateProfileMutation = useMutation({
     mutationFn: async (updatedData) => {
       console.log("Executing mutationFn with data:", updatedData);
+      // Also update Firebase profile
+      if (firebaseUser) {
+        await updateProfile(firebaseUser, {
+          displayName: updatedData.name,
+          photoURL: updatedData.photoURL,
+        });
+      }
       const response = await axiosPublic.put('/profile', updatedData);
       return response.data;
     },
