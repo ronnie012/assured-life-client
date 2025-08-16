@@ -52,7 +52,7 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>AssuredLife - Secure Your Tomorrow Today</title>
+        <title>assuredLifeDbUpgraded - Secure Your Tomorrow Today</title>
       </Helmet>
 
       {/* Hero Section */}
