@@ -45,7 +45,7 @@ const CustomerReviews = () => {
       <Swiper
         slidesPerView={1}
         spaceBetween={30}
-        loop={true}
+        loop={displayedReviews.length > 3}
         autoplay={{
           delay: 2500,
           disableOnInteraction: false,
