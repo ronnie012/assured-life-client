@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAxiosPublic from '../hooks/useAxiosPublic';
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import auth from '../config/firebase.config'; // Corrected import path
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -20,51 +20,54 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       console.log('onAuthStateChanged - currentUser:', currentUser);
-      console.log('onAuthStateChanged - currentUser.photoURL:', currentUser?.photoURL);
       setFirebaseUser(currentUser); // Store Firebase user
+
       if (currentUser) {
         try {
           const idToken = await currentUser.getIdToken();
-          const userInfo = {
+          console.log('onAuthStateChanged - Firebase ID Token:', idToken ? idToken.substring(0, 50) + '...' : 'None');
+          localStorage.setItem('token', idToken); // Store the token
+          console.log('onAuthStateChanged - Token stored in localStorage.');
+
+          // We only send minimal info to the backend to get the user profile
+          console.log('onAuthStateChanged - Calling upsertFirebaseUser with:', { uid: currentUser.uid, email: currentUser.email });
+          const response = await axiosPublic.post('/users/upsertFirebaseUser', {
             uid: currentUser.uid,
             email: currentUser.email,
-            name: currentUser.displayName || currentUser.email.split('@')[0] || '', // Ensure name is always set
-            photoURL: currentUser.photoURL || '', // Ensure photoURL is always set, even if empty
-          };
-          const response = await axiosPublic.post('/users/upsertFirebaseUser', userInfo);
-          console.log('onAuthStateChanged - backend upsert response:', response.data);
-          const mergedUserData = {
-            ...response.data,
-            uid: currentUser.uid, // Ensure Firebase UID is available as user.uid
-            name: response.data.name, // Trust backend for name
-            photoURL: response.data.photoURL, // Trust backend for photoURL
-          };
-          console.log('AuthProvider: Merged user data before setting state:', mergedUserData);
-          setUser(mergedUserData);
-          console.log('AuthProvider: User object set:', mergedUserData);
-          console.log('AuthProvider: User _id:', mergedUserData._id, 'Firebase UID:', mergedUserData.firebaseUid);
-          localStorage.setItem('token', idToken); // Store the token in localStorage
-          queryClient.invalidateQueries(['userProfile']);
+            // We avoid sending name and photoURL on every auth change
+            // to prevent overwriting the database with stale Firebase data.
+            // The registration and profile update flows are responsible for that.
+          });
+
+          console.log('onAuthStateChanged - Backend response from upsertFirebaseUser:', response.data);
+          setUser(response.data); // Set user state from our backend's source of truth
+          console.log('onAuthStateChanged - User state after setUser:', response.data);
+          queryClient.invalidateQueries({ queryKey: ['userProfile', currentUser.uid] });
+
         } catch (error) {
-          console.error('Failed to upsert user data in backend:', error.response?.data || error.message);
-          setUser(null); // Set user to null if backend upsert fails
-          localStorage.removeItem('token'); // Remove token on error
+          console.error('onAuthStateChanged - Failed to process user authentication:', error.response?.data || error.message);
+          setUser(null);
+          localStorage.removeItem('token');
+          console.log('onAuthStateChanged - Token removed from localStorage due to error.');
         } finally {
-          setLoading(false); // Always set loading to false after processing
+          setLoading(false);
+          console.log('onAuthStateChanged - Loading state after setLoading(false):', false);
         }
       } else {
-        console.log('onAuthStateChanged - no current user.');
+        console.log('onAuthStateChanged - No current user. Clearing state.');
         setUser(null);
-        localStorage.removeItem('token'); // Clear token on logout
-        setLoading(false); // Set loading to false when no user
-        queryClient.invalidateQueries(['userProfile']); // Invalidate userProfile query on logout
+        localStorage.removeItem('token');
+        console.log('onAuthStateChanged - Token removed from localStorage.');
+        setLoading(false);
+        console.log('onAuthStateChanged - Loading state after setLoading(false) (no user):', false);
+        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       }
     });
 
     return () => {
       unsubscribe();
     };
-  }, [axiosPublic]);
+  }, [axiosPublic, queryClient]);
 
   useEffect(() => {
     const requestInterceptor = axiosPublic.interceptors.request.use(
@@ -86,9 +89,11 @@ export const AuthProvider = ({ children }) => {
 
   const googleSignIn = () => {
     setLoading(true);
+    console.log('AuthContext: Initiating Google Sign-In.');
     return signInWithPopup(auth, googleProvider)
       .then(async (result) => {
         const currentUser = result.user;
+        console.log('AuthContext: Google Sign-In successful. Firebase User:', currentUser.uid);
         const userInfo = {
           uid: currentUser.uid,
           email: currentUser.email,
@@ -96,21 +101,26 @@ export const AuthProvider = ({ children }) => {
           photoURL: currentUser.photoURL || '', // Ensure photoURL is always set, even if empty
         };
         try {
+          console.log('AuthContext: Sending user info to backend for upsert:', userInfo);
           const response = await axiosPublic.post('/users/upsertFirebaseUser', userInfo);
+          console.log('AuthContext: Backend upsert response:', response.data);
           setUser(response.data); // Update frontend user state with data from backend
+          console.log('AuthContext: User state after Google login upsert:', response.data);
           toast.success('Login successful!');
         } catch (backendError) {
-          console.error('Failed to upsert user data to backend after Google login:', backendError);
+          console.error('AuthContext: Failed to upsert user data to backend after Google login:', backendError);
           toast.error('Google login successful, but failed to sync profile data.');
         }
         return result;
       })
       .catch((error) => {
+        console.error('AuthContext: Google login failed:', error.message);
         toast.error(error.message || 'Google login failed.');
         throw error;
       })
       .finally(() => {
         setLoading(false);
+        console.log('AuthContext: Loading state after Google login finally:', false);
       });
   };
 
@@ -121,17 +131,18 @@ export const AuthProvider = ({ children }) => {
       // After creating the user, update their profile in Firebase Auth
       if (firebaseAuth.currentUser) {
         try {
+          const photoURL = userData.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=random`;
           await updateProfile(firebaseAuth.currentUser, {
-            displayName: userData.name || userData.email.split('@')[0] || 'User',
-            photoURL: userData.photoURL || '',
+            displayName: userData.name,
+            photoURL: photoURL,
           });
 
           // Immediately upsert user data to backend after Firebase profile update
           const userInfoForBackend = {
             uid: firebaseAuth.currentUser.uid,
             email: firebaseAuth.currentUser.email,
-            name: userData.name || firebaseAuth.currentUser.displayName, // Use provided name or Firebase displayName
-            photoURL: userData.photoURL || firebaseAuth.currentUser.photoURL, // Use provided photoURL or Firebase photoURL
+            name: userData.name, // Use provided name
+            photoURL: photoURL, // Use generated or provided photoURL
           };
           const response = await axiosPublic.post('/users/upsertFirebaseUser', userInfoForBackend);
           setUser(response.data); // Update frontend user state with data from backend
@@ -202,6 +213,7 @@ export const AuthProvider = ({ children }) => {
     refreshUser,
     axiosPublic, // Make axiosPublic available through context
     firebaseUser, // Expose firebaseUser
+    updateProfile, // Expose updateProfile
   };
 
   return (
