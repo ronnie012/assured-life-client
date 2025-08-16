@@ -88,7 +88,7 @@ const MyPolicies = () => {
 
       const doc = new jsPDF();
 
-      doc.setFontSize(30).text('AssuredLife Policy Document', 40, 40);
+      doc.setFontSize(30).text('assuredLifeDbUpgraded Policy Document', 40, 40);
       doc.setFontSize(18).text(`Policy: ${policy.title}`, 40, 60);
       doc.setFontSize(16).text(`Category: ${policy.category}`, 40, 70);
 
@@ -103,7 +103,7 @@ const MyPolicies = () => {
       doc.setFontSize(16).text(`Term Duration: ${quote.duration || 'N/A'} years`, 40, 190);
       doc.setFontSize(16).text(`Premium: $ ${quote.estimatedPremium || 'N/A'} per month`, 40, 200);
 
-      doc.save(`AssuredLife_${user.name || user.email}_${policy.title}.pdf`);
+      doc.save(`assuredLifeDbUpgraded_${user.name || user.email}_${policy.title}.pdf`);
       toast.success('Policy PDF downloaded!');
     } catch (error) {
       console.error('Error generating PDF:', error);
