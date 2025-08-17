@@ -6,21 +6,21 @@ import { useAuth } from '../../../contexts/AuthProvider';
 import { Link } from 'react-router-dom';
 
 const PaymentStatus = () => {
-  const { user } = useAuth();
+  const { user, firebaseUser } = useAuth();
   const axiosPublic = useAxiosPublic();
   console.log('PaymentStatus - user:', user);
   console.log('PaymentStatus - user.uid:', user?.uid);
 
   const { data: applications, isLoading, isError, error } = useQuery({
-    queryKey: ['myApplications', user?.firebaseUid],
+    queryKey: ['myApplications', firebaseUser?.uid],
     queryFn: async () => {
-      if (!user?.firebaseUid) return [];
+      if (!firebaseUser?.uid) return [];
       const response = await axiosPublic.get('/applications/my-applications', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       return response.data.filter(app => app.status === 'Approved'); // Only show approved policies
     },
-    enabled: !!user?.firebaseUid, // Only run query if user ID is available
+    enabled: !!firebaseUser?.uid, // Only run query if user ID is available
   });
 
   if (isLoading) return (
