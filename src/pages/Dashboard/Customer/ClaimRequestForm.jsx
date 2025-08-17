@@ -8,34 +8,34 @@ import { useAuth } from '../../../contexts/AuthProvider';
 import { useQuery } from '@tanstack/react-query';
 
 const ClaimRequestForm = () => {
-  const { user, axiosPublic } = useAuth();
+  const { user, firebaseUser, axiosPublic } = useAuth();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
   // Fetch user's approved policies to allow claim submission
   const { data: approvedPolicies, isLoading: isLoadingPolicies, isError: isErrorPolicies } = useQuery({
-    queryKey: ['approvedPoliciesForClaim', user?.uid],
+    queryKey: ['approvedPoliciesForClaim', firebaseUser?.uid],
     queryFn: async () => {
-      if (!user?.uid) return [];
+      if (!firebaseUser?.uid) return [];
       const response = await axiosPublic.get('/applications/my-applications', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      // Filter for approved policies only
-      return response.data.filter(app => app.status?.toLowerCase() === 'approved');
+      // Filter for approved and paid policies only
+      return response.data.filter(app => app.status?.toLowerCase() === 'approved' && app.paymentStatus?.toLowerCase() === 'paid');
     },
-    enabled: !!user?.uid,
+    enabled: !!firebaseUser?.uid,
   });
 
   // Fetch user's existing claims
   const { data: userClaims, isLoading: isLoadingClaims, isError: isErrorClaims } = useQuery({
-    queryKey: ['userClaims', user?.uid],
+    queryKey: ['userClaims', firebaseUser?.uid],
     queryFn: async () => {
-      if (!user?.uid) return [];
+      if (!firebaseUser?.uid) return [];
       const response = await axiosPublic.get('/claims/my-claims', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       return response.data;
     },
-    enabled: !!user?.uid,
+    enabled: !!firebaseUser?.uid,
   });
 
   const onSubmit = async (data) => {
