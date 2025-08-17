@@ -70,7 +70,8 @@ const CustomerReviews = () => {
             spaceBetween: 50,
           },
         }}
-        className="mySwiper"
+        className="mySwiper customer-reviews-swiper min-h-[280px]"
+        
       >
         {displayedReviews.map((review) => (
           <SwiperSlide key={review._id}>

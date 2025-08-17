@@ -121,7 +121,7 @@ const Home = () => {
       <HowItWorks />
 
       {/* Customer Reviews Section */}
-      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 mt-8 ml-4">
+      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 mt-8 ml-2 gap-">
         <CustomerReviews />
       </div>
 
