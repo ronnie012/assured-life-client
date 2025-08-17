@@ -17,6 +17,7 @@ import LatestBlogs from '../../components/LatestBlogs';
 import PopularPolicies from '../../components/PopularPolicies';
 import Benefits from '../../components/Benefits';
 import CustomerReviews from '../../components/CustomerReviews';
+import LoadingSpinner from '../../components/LoadingSpinner'; // Import LoadingSpinner
 
 const Home = () => {
   const axiosPublic = useAxiosPublic();
@@ -155,9 +156,13 @@ const Home = () => {
         <div className=" mx-auto">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-12">Meet Our Agents</h2>
           {isLoadingAgents ? (
-            <div>Loading agents...</div>
+            <div className="flex justify-center items-center min-h-[300px]">
+              <LoadingSpinner text="Loading Agents..." />
+            </div>
           ) : isErrorAgents ? (
-            <div>Error loading agents.</div>
+            <div className="text-center my-12 text-red-600">
+              <p>Error loading agents. Please try again later.</p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredAgents.map((agent) => (
