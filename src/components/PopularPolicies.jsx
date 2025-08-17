@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import PolicyCard from "./PolicyCard";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+import LoadingSpinner from "./LoadingSpinner"; // Import LoadingSpinner
 
 const PopularPolicies = () => {
   const axiosPublic = useAxiosPublic();
@@ -16,8 +17,8 @@ const PopularPolicies = () => {
 
   if (isLoading) {
     return (
-      <div className="text-center my-12">
-        <p>Loading Popular Policies...</p>
+      <div className="flex justify-center items-center min-h-[300px]"> {/* Added min-height for better centering */}
+        <LoadingSpinner text="Loading Popular Policies..." />
       </div>
     );
   }
