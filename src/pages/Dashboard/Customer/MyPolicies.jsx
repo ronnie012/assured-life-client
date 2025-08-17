@@ -88,7 +88,7 @@ const MyPolicies = () => {
 
       const doc = new jsPDF();
 
-      doc.setFontSize(30).text('assuredLifeDbUpgraded Policy Document', 40, 40);
+      doc.setFontSize(30).text('Policy Document', 40, 40);
       doc.setFontSize(18).text(`Policy: ${policy.title}`, 40, 60);
       doc.setFontSize(16).text(`Category: ${policy.category}`, 40, 70);
 
@@ -103,7 +103,7 @@ const MyPolicies = () => {
       doc.setFontSize(16).text(`Term Duration: ${quote.duration || 'N/A'} years`, 40, 190);
       doc.setFontSize(16).text(`Premium: $ ${quote.estimatedPremium || 'N/A'} per month`, 40, 200);
 
-      doc.save(`assuredLifeDbUpgraded_${user.name || user.email}_${policy.title}.pdf`);
+      doc.save(`${user.name || user.email}_${policy.title}.pdf`);
       toast.success('Policy PDF downloaded!');
     } catch (error) {
       console.error('Error generating PDF:', error);
@@ -133,9 +133,9 @@ const MyPolicies = () => {
               <th scope="col" className="px-4 py-3">Coverage</th>
               <th scope="col" className="px-4 py-3">Duration</th>
               <th scope="col" className="px-4 py-3">Premium</th>
-              <th scope="col" className="px-1 py-3 whitespace-normal">Application Date</th>
-              <th scope="col" className="px-1 py-3 whitespace-normal">Payment Status</th>
-              <th scope="col" className="px-1 py-3">Claim Status</th>
+              <th scope="col" className="px-1 py-3 w-20">Application Date</th>
+              <th scope="col" className="px-1 py-3 w-20">Payment Status</th>
+              <th scope="col" className="px-1 py-3 w-48">Claim Status</th>
               <th scope="col" className="px-4 py-3">Actions</th>
             </tr>
           </thead>
