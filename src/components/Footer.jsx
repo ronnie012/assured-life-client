@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaFacebookF, FaTwitter, FaYoutube, FaLinkedinIn } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaYoutube, FaLinkedinIn, FaShieldAlt } from 'react-icons/fa'; // Added FaShieldAlt
 
 const Footer = () => {
   return (
@@ -9,7 +8,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-4">
           {/* Company Info */}
           <div>
-            <h3 className="text-2xl font-bold mb-3">AssuredLife</h3>
+            <h3 className="text-2xl font-bold mb-3 flex items-center justify-center"> {/* Added flex, items-center, justify-center */}
+              <FaShieldAlt className="h-5 w-5 md:h-6 md:w-6 mr-2 text-blue-500" /> {/* Shield Icon */}
+              AssuredLife
+            </h3>
             <p className="text-gray-600 dark:text-gray-300 text-md">
               Simplifying the process of purchasing and managing life insurance.
               Secure Your Tomorrow, Today.
