@@ -88,10 +88,10 @@ export default function AppNavbar() {
     }`;
 
   return (
-    <Disclosure as="nav" className="bg-white dark:bg-gray-900 sticky top-0 z-50 backdrop-blur-lg bg-opacity-10 dark:bg-opacity-10 border mt-2 border-gray-200 dark:border-gray-700 max-w-7xl ml-9 rounded-lg">
+    <Disclosure as="nav" className="bg-white dark:bg-gray-900 sticky top-0 z-50 backdrop-blur-lg bg-opacity-10 dark:bg-opacity-10 border mt- border-gray-200 dark:border-gray-700 rounded-bl-lg rounded-br-lg">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
               <div className="flex items-center">
                 <Link to="/" className="flex items-center text-gray-900 dark:text-white text-xl md:text-2xl font-bold">
