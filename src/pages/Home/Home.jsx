@@ -18,6 +18,8 @@ import PopularPolicies from '../../components/PopularPolicies';
 import Benefits from '../../components/Benefits';
 import CustomerReviews from '../../components/CustomerReviews';
 import LoadingSpinner from '../../components/LoadingSpinner'; // Import LoadingSpinner
+import HowItWorks from '../../components/HowItWorks';
+import FAQSection from '../../components/FAQSection';
 
 const Home = () => {
   const axiosPublic = useAxiosPublic();
@@ -58,6 +60,7 @@ const Home = () => {
 
       {/* Hero Section */}
       <Swiper
+        id="hero-section"
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}
         centeredSlides={true}
@@ -114,6 +117,9 @@ const Home = () => {
         <PopularPolicies />
       </section>
 
+      {/* How It Works Section */}
+      <HowItWorks />
+
       {/* Customer Reviews Section */}
       <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 mt-8 ml-4">
         <CustomerReviews />
@@ -123,6 +129,9 @@ const Home = () => {
       <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 ml-1">
         <LatestBlogs />
       </div>
+
+      {/* FAQ Section */}
+      <FAQSection />
 
       {/* Newsletter Subscription Section */}
       <section className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-gray-100 dark:bg-gray-800 rounded-2xl mt-8 text-center">

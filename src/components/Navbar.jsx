@@ -1,7 +1,7 @@
-import { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { FaShieldAlt } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthProvider';
 import { useTheme } from '../contexts/ThemeContext';
@@ -11,11 +11,71 @@ const navLinks = [
   { name: 'All Policies', href: '/policies' },
   { name: 'Blog/Articles', href: '/blog' },
   { name: 'About Us', href: '/about-us' },
+  { name: 'FAQ', href: '/#faq-section' },
 ];
 
 export default function AppNavbar() {
   const { user, logout, loading } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [isHeroSectionInView, setIsHeroSectionInView] = useState(true); // Default to true
+  const [isFAQSectionInView, setIsFAQSectionInView] = useState(false);
+
+  useEffect(() => {
+    const heroSection = document.getElementById('hero-section');
+    if (heroSection) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          setIsHeroSectionInView(entry.isIntersecting);
+        },
+        { threshold: 0.5 } // Adjust threshold as needed
+      );
+      observer.observe(heroSection);
+      return () => {
+        observer.unobserve(heroSection);
+      };
+    }
+  }, [location.pathname]); // Re-observe if path changes
+
+  useEffect(() => {
+    const faqSection = document.getElementById('faq-section');
+    if (faqSection) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          setIsFAQSectionInView(entry.isIntersecting);
+        },
+        { threshold: 0.5 } // Adjust threshold as needed
+      );
+      observer.observe(faqSection);
+      return () => {
+        observer.unobserve(faqSection);
+      };
+    }
+  }, [location.pathname]); // Re-observe if path changes
+
+  const handleNavLinkClick = (e, href) => {
+    if (href.includes('#')) {
+      e.preventDefault();
+      const [path, hash] = href.split('#');
+      if (location.pathname !== path) {
+        navigate(path + location.search + location.hash);
+        // Wait for navigation to complete, then scroll
+        setTimeout(() => {
+          const element = document.getElementById(hash);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100); // Small delay to allow page to render
+      } else {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+  };
 
   const getNavLinkClass = ({ isActive }) =>
     `relative text-gray-700 dark:text-white font-medium text-sm px-3 py-2 group overflow-hidden ${
@@ -42,16 +102,33 @@ export default function AppNavbar() {
 
               <div className="hidden md:flex flex-grow justify-center items-center">
                 <div className="flex items-center md:space-x-2 lg:space-x-4">
-                  {navLinks.map((item) => (
-                    <NavLink key={item.name} to={item.href} end={item.href === '/'} className={getNavLinkClass}>
-                      {({ isActive }) => (
-                        <>
-                          {item.name}
-                          <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform transition-transform duration-300 ease-out ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
-                        </>
-                      )}
-                    </NavLink>
-                  ))}
+                  {navLinks.map((item) => {
+                    const isFAQLink = item.name === 'FAQ';
+                    const isHomeLink = item.name === 'Home';
+                    let isActive = false;
+
+                    if (isHomeLink) {
+                      isActive = location.pathname === '/' && isHeroSectionInView;
+                    } else if (isFAQLink) {
+                      isActive = location.pathname === '/' && isFAQSectionInView;
+                    } else {
+                      isActive = location.pathname.startsWith(item.href);
+                    }
+
+                    return (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        onClick={isFAQLink || isHomeLink ? (e) => handleNavLinkClick(e, isHomeLink ? '/#hero-section' : item.href) : undefined}
+                        className={`relative text-gray-700 dark:text-white font-medium text-sm px-3 py-2 group overflow-hidden ${
+                          isActive ? 'text-blue-600 dark:text-blue-400' : ''
+                        }`}
+                      >
+                        {item.name}
+                        <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform transition-transform duration-300 ease-out ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                      </Link>
+                    );
+                  })}
                   {user && (
                     <NavLink to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'agent' ? '/agent/dashboard' : '/customer/dashboard'} className={getNavLinkClass}>
                       {({ isActive }) => (
@@ -119,11 +196,33 @@ export default function AppNavbar() {
 
           <Disclosure.Panel className="md:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
-              {navLinks.map((item) => (
-                <Disclosure.Button key={item.name} as={NavLink} to={item.href} end={item.href === '/'} className={getMobileNavLinkClass}>
-                  {item.name}
-                </Disclosure.Button>
-              ))}
+              {navLinks.map((item) => {
+                const isFAQLink = item.name === 'FAQ';
+                const isHomeLink = item.name === 'Home';
+                let isActive = false;
+
+                if (isHomeLink) {
+                  isActive = location.pathname === '/' && isHeroSectionInView;
+                } else if (isFAQLink) {
+                  isActive = location.pathname === '/' && isFAQSectionInView;
+                } else {
+                  isActive = location.pathname.startsWith(item.href);
+                }
+
+                return (
+                  <Disclosure.Button
+                    key={item.name}
+                    as={Link} // Use Link here
+                    to={item.href}
+                    onClick={isFAQLink || isHomeLink ? (e) => handleNavLinkClick(e, isHomeLink ? '/#hero-section' : item.href) : undefined}
+                    className={`relative text-gray-700 dark:text-white font-medium text-sm px-3 py-2 group overflow-hidden block ${
+                      isActive ? 'text-blue-600 dark:text-blue-400' : ''
+                    }`}
+                  >
+                    {item.name}
+                  </Disclosure.Button>
+                );
+              })}
               {user && (
                 <>
                   <Disclosure.Button as={NavLink} to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'agent' ? '/agent/dashboard' : '/customer/dashboard'} className={getMobileNavLinkClass}>
