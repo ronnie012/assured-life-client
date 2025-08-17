@@ -31,6 +31,7 @@ import FAQsPage from '../pages/FAQs/FAQsPage';
 import AgentsPage from '../pages/Agents/AgentsPage';
 import PolicyClearance from '../pages/Dashboard/Agent/PolicyClearance';
 import NotFound from '../pages/NotFound/NotFound';
+import AboutUsPage from '../pages/AboutUs/AboutUsPage'; // Import the new AboutUsPage
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
       {
         path: '/blog/:id',
         element: <BlogDetails />,
+      },
+      {
+        path: '/about-us', // New route for About Us
+        element: <AboutUsPage />,
       },
       {
         path: 'apply',

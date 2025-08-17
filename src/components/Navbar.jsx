@@ -10,6 +10,7 @@ const navLinks = [
   { name: 'Home', href: '/' },
   { name: 'All Policies', href: '/policies' },
   { name: 'Blog/Articles', href: '/blog' },
+  { name: 'About Us', href: '/about-us' },
 ];
 
 export default function AppNavbar() {
