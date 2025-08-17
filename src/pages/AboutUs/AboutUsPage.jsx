@@ -23,14 +23,14 @@ const AboutUsPage = () => {
         {/* Mission & Vision */}
         <section className="grid md:grid-cols-2 gap-8 mb-16">
           <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg flex flex-col items-center text-center">
-            <FaLightbulb className="text-5xl text-yellow-500 mb-4" />
+            <FaLightbulb className="text-5xl text-blue-500 mb-4" />
             <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
             <p className="text-lg text-gray-700 dark:text-gray-300">
               To bring transparency and trust to the life insurance industry, making it accessible and understandable for everyone. We empower individuals to secure their future with confidence.
             </p>
           </div>
           <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg flex flex-col items-center text-center">
-            <FaHandshake className="text-5xl text-green-500 mb-4" />
+            <FaHandshake className="text-5xl text-blue-500 mb-4" />
             <h2 className="text-3xl font-bold mb-4">Our Vision</h2>
             <p className="text-lg text-gray-700 dark:text-gray-300">
               To be the leading digital platform for life insurance management, recognized for our user-centric design, innovative solutions, and unwavering commitment to customer well-being.
@@ -43,7 +43,7 @@ const AboutUsPage = () => {
           <h2 className="text-4xl font-bold text-center mb-8">Our Values</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-              <FaHeart className="text-4xl text-red-500 mb-3 mx-auto" />
+              <FaHeart className="text-4xl text-blue-500 mb-3 mx-auto" />
               <h3 className="text-2xl font-semibold mb-2">Empathy</h3>
               <p className="text-gray-700 dark:text-gray-300">
                 We understand the importance of securing your loved ones' future and approach every interaction with care and understanding.
@@ -57,7 +57,7 @@ const AboutUsPage = () => {
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-              <FaLightbulb className="text-4xl text-purple-500 mb-3 mx-auto" />
+              <FaLightbulb className="text-4xl text-blue-500 mb-3 mx-auto" />
               <h3 className="text-2xl font-semibold mb-2">Innovation</h3>
               <p className="text-gray-700 dark:text-gray-300">
                 We continuously seek new ways to improve our platform and services, leveraging technology for a better user experience.
@@ -71,32 +71,32 @@ const AboutUsPage = () => {
           <h2 className="text-4xl font-bold text-center mb-8">Why Choose AssuredLife?</h2>
           <div className="grid md:grid-cols-3 lg:grid-cols-3 gap-6">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
-              <FaCalculator className="text-4xl text-indigo-500 mb-3" />
+              <FaCalculator className="text-4xl text-blue-500 mb-3" />
               <h3 className="text-xl font-semibold mb-2">Instant Quote Calculation</h3>
               <p className="text-gray-700 dark:text-gray-300">Get personalized premium estimates in minutes.</p>
             </div>
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
-              <FaUserTie className="text-4xl text-teal-500 mb-3" />
+              <FaUserTie className="text-4xl text-blue-500 mb-3" />
               <h3 className="text-xl font-semibold mb-2">Expert Agent Support</h3>
               <p className="text-gray-700 dark:text-gray-300">Connect with experienced agents for personalized advice.</p>
             </div>
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
-              <FaLaptopCode className="text-4xl text-orange-500 mb-3" />
+              <FaLaptopCode className="text-4xl text-blue-500 mb-3" />
               <h3 className="text-xl font-semibold mb-2">100% Online Application</h3>
               <p className="text-gray-700 dark:text-gray-300">Apply for policies conveniently from anywhere, anytime.</p>
             </div>
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
-              <FaCreditCard className="text-4xl text-pink-500 mb-3" />
+              <FaCreditCard className="text-4xl text-blue-500 mb-3" />
               <h3 className="text-xl font-semibold mb-2">Secure Online Payments</h3>
               <p className="text-gray-700 dark:text-gray-300">Process premiums securely with trusted payment gateways.</p>
             </div>
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
-              <FaChartLine className="text-4xl text-cyan-500 mb-3" />
+              <FaChartLine className="text-4xl text-blue-500 mb-3" />
               <h3 className="text-xl font-semibold mb-2">Real-Time Claim Tracking</h3>
               <p className="text-gray-700 dark:text-gray-300">Monitor the status of your claims with ease.</p>
             </div>
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
-              <FaUserTie className="text-4xl text-lime-500 mb-3" />
+              <FaUserTie className="text-4xl text-blue-500 mb-3" />
               <h3 className="text-xl font-semibold mb-2">Personalized Dashboard Access</h3>
               <p className="text-gray-700 dark:text-gray-300">Manage your policies and profile from a dedicated dashboard.</p>
             </div>
