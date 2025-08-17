@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import ReviewCard from "./ReviewCard";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+import LoadingSpinner from "./LoadingSpinner"; // Import LoadingSpinner
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -27,8 +28,8 @@ const CustomerReviews = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-48 text-center bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-        <span className="loading loading-lg mr-2"></span> Loading Customer Reviews...
+      <div className="flex justify-center items-center min-h-[300px]"> {/* Added min-height for better centering */}
+        <LoadingSpinner text="Loading Customer Reviews..." />
       </div>
     );
   }
