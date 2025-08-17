@@ -4,14 +4,16 @@ assuredLifeDbUpgraded is a modern, full-stack web application designed to stream
 
 ## Live Site URL
 
-**Live Site:** [https://assured-life.web.app/](https://assured-life.web.app/)
+The Front-End application is deployed and accessible at the following URL:
 
-## Admin Credentials
+**Live Site:** [https://assured-life-upgraded.web.app/](https://assured-life-upgraded.web.app/)
+
+<!-- ## Admin Credentials
 
 To access the admin dashboard, please use the following credentials:
 
 - **Email:** `m.sharful.i247@gmail.com`
-- **Password:** `[I.admin.assured-life.01]`
+- **Password:** `[I.admin.assured-life.01]` -->
 
 ---
 
