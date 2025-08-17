@@ -161,8 +161,8 @@ const Home = () => {
       </section>
 
       {/* Meet Our Agents Section */}
-      <section className="max-w-7xl mx-auto py-12 px-0 sm:px-0 lg:px-0 bg-white dark:bg-gray-900 ml-1">
-        <div className=" mx-auto">
+      <section className="max-w-7xl mx-auto py-12 bg-white dark:bg-gray-900">
+        <div className="">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-12">Meet Our Agents</h2>
           {isLoadingAgents ? (
             <div className="flex justify-center items-center min-h-[300px]">
@@ -173,7 +173,7 @@ const Home = () => {
               <p>Error loading agents. Please try again later.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-16">
               {featuredAgents.map((agent) => (
                 <AgentCard key={agent._id} agent={agent} />
               ))}
