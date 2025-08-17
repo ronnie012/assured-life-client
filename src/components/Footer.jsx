@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaFacebookF, FaTwitter, FaYoutube, FaLinkedinIn, FaShieldAlt } from 'react-icons/fa'; // Added FaShieldAlt
+import { FaFacebookF, FaTwitter, FaYoutube, FaLinkedinIn, FaShieldAlt, FaGithub } from 'react-icons/fa'; // Added FaShieldAlt
 
 const Footer = () => {
   return (
@@ -32,16 +32,22 @@ const Footer = () => {
                 <Link to="/blog" className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-300">Blog</Link>
               </li>
               <li className="mb-1">
-                <Link to="/contact" className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-300">Contact Us</Link>
+                <Link to="/about-us" className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-300">Contact Us</Link>
               </li>
             </ul>
           </div>
 
           {/* Social Media */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
+            <h4 className="text-lg font-semibold mb-4">Stay Connected With Us</h4>
             <div className="flex justify-center space-x-4">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-300">
+              <a href="https://linkedin.com/in/md-sharful-islam" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-300">
+                <FaLinkedinIn className="text-2xl" />
+              </a>
+              <a href="https://github.com/ronnie012" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-300">
+                <FaGithub className="text-2xl" />
+              </a>
+              <a href="https://www.facebook.com/profile.php?id=61571101114481" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-300">
                 <FaFacebookF className="text-2xl" />
               </a>
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-300">
@@ -50,9 +56,7 @@ const Footer = () => {
               <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-300">
                 <FaYoutube className="text-2xl" />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-300">
-                <FaLinkedinIn className="text-2xl" />
-              </a>
+              
             </div>
           </div>
 
