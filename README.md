@@ -1,19 +1,16 @@
-# assuredLifeDbUpgraded - Life Insurance Management Platform - Client Side
+# AssuredLife - Life Insurance Management Platform _ Client
 
 assuredLifeDbUpgraded is a modern, full-stack web application designed to streamline the process of purchasing and managing life insurance policies. It provides a secure, responsive, and role-based platform for customers, agents, and administrators.
 
-## Live Site URL
+## Live Site's Link
 
-The Front-End application is deployed and accessible at the following URL:
+The Live Site has been successfully deployed and accessible at the following URL:
 
 **Live Site:** [https://assured-life-upgraded.web.app/](https://assured-life-upgraded.web.app/)
 
-<!-- ## Admin Credentials
+---
 
-To access the admin dashboard, please use the following credentials:
-
-- **Email:** `m.sharful.i247@gmail.com`
-- **Password:** `[I.admin.assured-life.01]` -->
+![AssuredLife](AssuredLife_assured-life-upgraded.web.app.png)
 
 ---
 
@@ -47,4 +44,4 @@ To access the admin dashboard, please use the following credentials:
 - **Authentication:** Firebase Authentication, JWT
 - **Payments:** Stripe
 - **Data Fetching:** Tanstack Query (React Query)
-- **Deployment:** Vercel (Client), Render (Server) - *or your preferred services*
+- **Deployment:** Firebase (Client), Vercel (Server)
