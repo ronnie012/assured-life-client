@@ -1,6 +1,6 @@
 # AssuredLife - Life Insurance Management Platform _ Client
 
-assuredLifeDbUpgraded is a modern, full-stack web application designed to streamline the process of purchasing and managing life insurance policies. It provides a secure, responsive, and role-based platform for customers, agents, and administrators.
+AssuredLife is a modern, full-stack web application designed to streamline the process of purchasing and managing life insurance policies. It provides a secure, responsive, and role-based platform for customers, agents, and administrators.
 
 ## Live Site's Link
 
